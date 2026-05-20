@@ -1,0 +1,1801 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>고교학점제 선택과목 상담 도구</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#f4f3f0;color:#1a1a18;font-size:15px;line-height:1.6;}
+.wrap{max-width:900px;margin:0 auto;padding:1.5rem 1rem;}
+.hd{margin-bottom:1.5rem;}
+.hd h1{font-size:17px;font-weight:700;margin-bottom:3px;}
+.hd p{font-size:12px;color:#888;}
+.tabs{display:flex;gap:6px;border-bottom:2px solid #e0e0dc;margin-bottom:1.5rem;}
+.tab{padding:9px 18px;font-size:13px;cursor:pointer;border:none;background:transparent;color:#999;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:#1a1a18;font-weight:700;border-bottom:2px solid #1a1a18;}
+.pnl{display:none;}.pnl.on{display:block;}
+.prog{height:3px;background:#e0e0dc;border-radius:99px;margin-bottom:1.5rem;}
+.pf{height:100%;background:#2563eb;border-radius:99px;transition:width .3s;}
+.card{background:#fff;border:1px solid #e0e0dc;border-radius:10px;padding:1.1rem 1.3rem;margin-bottom:12px;}
+.ql{font-size:11px;color:#bbb;margin-bottom:4px;font-weight:600;letter-spacing:.05em;}
+.qt{font-size:15px;color:#1a1a18;margin-bottom:3px;font-weight:700;line-height:1.5;}
+.qs{font-size:12px;color:#999;margin-bottom:12px;}
+.g{display:flex;flex-wrap:wrap;gap:6px;}
+.b{padding:6px 12px;font-size:13px;border:1px solid #d8d8d4;border-radius:6px;background:#fafaf8;color:#444;cursor:pointer;transition:all .12s;line-height:1.4;}
+.b:hover{border-color:#888;background:#f0f0ec;}
+.b.on{background:#eff6ff;border-color:#2563eb;color:#1d4ed8;font-weight:600;}
+.bn{margin-top:10px;padding:8px 20px;font-size:13px;border:1px solid #2563eb;border-radius:6px;background:#2563eb;color:#fff;cursor:pointer;font-weight:600;}
+.bn:hover{background:#1d4ed8;}
+.bsk{margin-top:10px;margin-left:8px;padding:8px 14px;font-size:13px;border:1px solid #ddd;border-radius:6px;background:transparent;color:#999;cursor:pointer;}
+.brs{padding:7px 16px;font-size:13px;border:1px solid #ddd;border-radius:6px;background:transparent;color:#888;cursor:pointer;}
+textarea{width:100%;padding:9px 11px;font-size:13px;border:1px solid #d8d8d4;border-radius:6px;background:#fafaf8;color:#1a1a18;margin-top:4px;resize:vertical;min-height:68px;font-family:inherit;}
+.tag{display:inline-block;padding:5px 11px;font-size:12px;border-radius:5px;margin:3px;font-weight:600;}
+.tm{background:#dbeafe;color:#1e40af;}
+.tm2{background:#e0e7ff;color:#3730a3;}
+.tr{background:#dcfce7;color:#15803d;}
+.to{background:#fef3c7;color:#92400e;}
+.wb{border-radius:7px;padding:10px 14px;font-size:13px;margin-top:8px;line-height:1.6;}
+.wy{background:#fffbeb;border:1px solid #fcd34d;color:#78350f;}
+.wbl{background:#eff6ff;border:1px solid #93c5fd;color:#1e3a8a;}
+.wg{background:#f0fdf4;border:1px solid #86efac;color:#14532d;}
+.wr{background:#fef2f2;border:1px solid #fca5a5;color:#7f1d1d;}
+.wo{background:#fff7ed;border:1px solid #fdba74;color:#7c2d12;}
+.ev{display:inline-block;padding:2px 7px;font-size:11px;border-radius:4px;font-weight:700;}
+.e5{background:#fee2e2;color:#b91c1c;}
+.eae{background:#dcfce7;color:#15803d;}
+.eac{background:#fef3c7;color:#92400e;}
+.nbox{background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:11px 14px;font-size:13px;color:#0c4a6e;margin-bottom:14px;line-height:1.8;}
+.mt{width:100%;border-collapse:collapse;font-size:12px;}
+.mt th{text-align:left;padding:6px 8px;color:#888;border-bottom:1px solid #e0e0dc;font-weight:600;white-space:nowrap;background:#fafaf8;}
+.mt td{padding:6px 8px;border-bottom:1px solid #f0f0ec;color:#333;vertical-align:middle;}
+.mt tr:hover td{background:#fafafa;}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;}
+.dm{background:#2563eb;}.dr{background:#16a34a;}.do{background:#d97706;}.df{background:#9333ea;}
+.lgd{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:#888;margin-bottom:10px;align-items:center;}
+.rsec{margin-bottom:14px;}
+.rst{font-size:12px;font-weight:700;color:#555;margin-bottom:7px;}
+.cdesc{font-size:12px;color:#2563eb;margin-top:7px;line-height:1.4;min-height:16px;font-weight:500;}
+.arow td{background:#f7f7f4;font-size:11px;font-weight:700;color:#666;padding:5px 8px;}
+.yr-sel{display:flex;gap:8px;margin-bottom:1rem;}
+.yr-btn{padding:8px 20px;font-size:13px;border:1px solid #d8d8d4;border-radius:7px;background:#fff;color:#666;cursor:pointer;font-weight:500;}
+.yr-btn.on{border-color:#2563eb;background:#eff6ff;color:#1d4ed8;font-weight:700;}
+.schip{display:inline-block;padding:2px 7px;font-size:10px;border-radius:4px;font-weight:600;background:#f3e8ff;color:#6b21a8;margin-left:4px;}
+.cg-title{font-size:11px;font-weight:700;color:#888;margin:12px 0 5px;letter-spacing:.04em;}
+.filter-wrap{margin-bottom:12px;}
+.filter-wrap select{padding:7px 10px;font-size:13px;border:1px solid #d8d8d4;border-radius:6px;background:#fff;color:#333;cursor:pointer;min-width:220px;}
+.sec-divider{height:1px;background:#e0e0dc;margin:16px 0 10px;}
+.common-badge{display:inline-block;padding:2px 7px;font-size:10px;font-weight:700;border-radius:4px;background:#fef3c7;color:#92400e;margin-left:5px;vertical-align:middle;}
+.only-badge{display:inline-block;padding:2px 7px;font-size:10px;font-weight:700;border-radius:4px;background:#e0e7ff;color:#3730a3;margin-left:5px;vertical-align:middle;}
+/* PDF/업로드 */
+.tool-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;align-items:center;}
+.btn-pdf{padding:7px 16px;font-size:13px;border:1px solid #16a34a;border-radius:6px;background:#f0fdf4;color:#15803d;cursor:pointer;font-weight:600;}
+.btn-pdf:hover{background:#dcfce7;}
+.btn-upload{padding:7px 16px;font-size:13px;border:1px solid #d8d8d4;border-radius:6px;background:#fafaf8;color:#555;cursor:pointer;font-weight:500;}
+.btn-upload:hover{background:#f0f0ec;}
+.btn-tmpl{padding:7px 16px;font-size:13px;border:1px solid #d97706;border-radius:6px;background:#fffbeb;color:#92400e;cursor:pointer;font-weight:500;}
+.btn-tmpl:hover{background:#fef3c7;}
+.upload-status{font-size:12px;color:#16a34a;font-weight:600;padding:4px 0;}
+.upload-err{font-size:12px;color:#dc2626;font-weight:600;padding:4px 0;}
+.mode-badge{display:inline-block;padding:3px 10px;font-size:12px;font-weight:700;border-radius:20px;background:#dbeafe;color:#1d4ed8;margin-left:8px;}
+.mode-badge.custom{background:#dcfce7;color:#15803d;}
+@media print{
+  .tabs,.tool-bar,.yr-sel,.prog,.brs,.bsk,.bn,.filter-wrap,.btn-pdf,.btn-upload,.btn-tmpl,.upload-status,.upload-err{display:none!important;}
+  .pnl{display:block!important;}
+  body{background:#fff;}
+  .card{break-inside:avoid;box-shadow:none;border:1px solid #ccc;}
+}
+</style>
+<style>
+/* ── 충족률·플래너 추가 스타일 ── */
+.plan-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.plan-tab{padding:6px 14px;font-size:12px;border:1px solid #d8d8d4;border-radius:6px;background:#fafaf8;color:#666;cursor:pointer;font-weight:500;}
+.plan-tab.on{background:#2563eb;border-color:#2563eb;color:#fff;font-weight:700;}
+.plan-panel{display:none;}.plan-panel.on{display:block;}
+.subj-grid{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+.subj-btn{padding:5px 11px;font-size:12px;border:1px solid #d8d8d4;border-radius:5px;background:#fafaf8;color:#444;cursor:pointer;}
+.subj-btn:hover{background:#f0f0ec;border-color:#999;}
+.subj-btn.on{background:#2563eb;border-color:#2563eb;color:#fff;font-weight:600;}
+.meter-bar{height:9px;background:#e0e0dc;border-radius:99px;overflow:hidden;margin:3px 0;}
+.meter-fill{height:100%;border-radius:99px;transition:width .4s;}
+.fill-h{background:#16a34a;}.fill-m{background:#d97706;}.fill-l{background:#dc2626;}
+.rank-card{background:#fff;border:1px solid #e0e0dc;border-radius:8px;padding:10px 13px;margin-bottom:8px;}
+.rank-num{display:inline-block;width:22px;height:22px;border-radius:50%;background:#2563eb;color:#fff;font-size:11px;font-weight:700;text-align:center;line-height:22px;margin-right:6px;vertical-align:middle;}
+.rank-pct{font-size:12px;font-weight:700;float:right;margin-top:2px;}
+.cmp-row{display:flex;gap:8px;margin-bottom:10px;}
+.cmp-col{flex:1;min-width:0;border:1px solid #e0e0dc;border-radius:8px;padding:10px;background:#fff;}
+.cmp-hd{font-size:13px;font-weight:700;color:#2563eb;margin-bottom:8px;text-align:center;padding-bottom:6px;border-bottom:2px solid #eff6ff;}
+.sec-ttl{font-size:11px;font-weight:700;color:#888;margin:8px 0 5px;letter-spacing:.04em;}
+.chip-ok{background:#dcfce7;color:#15803d;padding:3px 7px;border-radius:4px;font-size:11px;display:inline-block;margin:2px;font-weight:600;}
+.chip-miss{background:#fee2e2;color:#b91c1c;padding:3px 7px;border-radius:4px;font-size:11px;display:inline-block;margin:2px;}
+.ring-wrap{text-align:center;padding:8px 0;}
+.ring{width:70px;height:70px;border-radius:50%;margin:0 auto 5px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;}
+.ring-h{background:#dcfce7;color:#15803d;border:3px solid #16a34a;}
+.ring-m{background:#fef3c7;color:#92400e;border:3px solid #d97706;}
+.ring-l{background:#fee2e2;color:#dc2626;border:3px solid #dc2626;}
+/* 결과 내 충족률 미니 위젯 */
+.fulfill-mini{background:#f8faff;border:1px solid #dbeafe;border-radius:8px;padding:10px 13px;margin-top:12px;}
+.fulfill-mini-title{font-size:12px;font-weight:700;color:#1e40af;margin-bottom:8px;}
+</style>
+
+<style>
+/* ── 결과 화면 가독성 업그레이드 ── */
+.result-card{padding:0;background:transparent;border:none;}
+.result-hero{background:linear-gradient(135deg,#172554 0%,#1d4ed8 58%,#60a5fa 100%);color:white;border-radius:18px;padding:22px 24px;margin-bottom:16px;box-shadow:0 14px 30px rgba(30,64,175,.18);}
+.result-kicker{font-size:12px;font-weight:800;letter-spacing:.08em;opacity:.82;margin-bottom:6px;}
+.result-title{font-size:22px;font-weight:900;line-height:1.35;margin-bottom:10px;}
+.result-sub{font-size:13px;opacity:.9;line-height:1.65;max-width:760px;}
+.summary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0 16px;}
+.summary-card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:14px 15px;box-shadow:0 8px 20px rgba(15,23,42,.05);}
+.summary-label{font-size:11px;color:#64748b;font-weight:800;letter-spacing:.04em;margin-bottom:5px;}
+.summary-value{font-size:20px;font-weight:900;color:#111827;line-height:1;}
+.summary-help{font-size:12px;color:#6b7280;margin-top:6px;line-height:1.45;}
+.focus-panel{background:#fff;border:1px solid #dbeafe;border-radius:18px;padding:17px 18px;margin-bottom:14px;box-shadow:0 10px 24px rgba(37,99,235,.07);}
+.focus-title{font-size:16px;font-weight:900;color:#1e3a8a;margin-bottom:6px;}
+.focus-desc{font-size:13px;color:#475569;margin-bottom:12px;line-height:1.6;}
+.subject-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:8px;}
+.subject-pill{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border:1px solid #e5e7eb;border-radius:12px;background:#f8fafc;font-size:13px;font-weight:800;color:#1f2937;}
+.subject-pill .kind{font-size:10px;font-weight:900;border-radius:999px;padding:3px 7px;white-space:nowrap;}
+.kind-career{background:#dbeafe;color:#1d4ed8}.kind-general{background:#dcfce7;color:#15803d}.kind-fusion{background:#fef3c7;color:#92400e}
+.result-section{background:#fff;border:1px solid #e5e7eb;border-radius:18px;padding:16px 18px;margin-bottom:12px;box-shadow:0 8px 20px rgba(15,23,42,.045);}
+.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px;}
+.section-title{font-size:15px;font-weight:900;color:#111827;}
+.section-note{font-size:12px;color:#64748b;line-height:1.45;margin-top:2px;}
+.section-badge{font-size:11px;font-weight:900;border-radius:999px;padding:5px 9px;background:#eff6ff;color:#1d4ed8;white-space:nowrap;}
+.subj-compact{display:flex;flex-wrap:wrap;gap:7px;}
+.subj-compact .tag{margin:0;border-radius:999px;padding:6px 10px;font-size:12px;}
+.warning-stack{display:grid;gap:8px;margin:12px 0;}
+.smart-warning{border-radius:14px;padding:12px 14px;font-size:13px;line-height:1.65;border:1px solid;display:flex;gap:10px;background:#fff;}
+.smart-warning .ico{font-size:18px;line-height:1.2}.smart-warning strong{color:#111827;}
+.smart-warning.warn{border-color:#fbbf24;background:#fffbeb;color:#78350f}.smart-warning.info{border-color:#93c5fd;background:#eff6ff;color:#1e3a8a}.smart-warning.good{border-color:#86efac;background:#f0fdf4;color:#14532d}.smart-warning.danger{border-color:#fca5a5;background:#fef2f2;color:#7f1d1d}
+.action-strip{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;background:#f8fafc;border:1px solid #e5e7eb;border-radius:14px;padding:10px;}
+details.result-section summary{cursor:pointer;list-style:none;}
+details.result-section summary::-webkit-details-marker{display:none;}
+details.result-section summary:after{content:'펼쳐보기';font-size:11px;font-weight:900;border-radius:999px;padding:5px 9px;background:#f1f5f9;color:#64748b;white-space:nowrap;}
+details.result-section[open] summary:after{content:'접기';}
+@media(max-width:720px){.summary-grid{grid-template-columns:1fr}.result-title{font-size:19px}.subject-list{grid-template-columns:1fr}.section-head{flex-direction:column}.result-hero{padding:18px}}
+@media print{.result-card{border:none!important}.result-hero{box-shadow:none;color:#111;background:#fff;border:1px solid #ccc}.summary-card,.focus-panel,.result-section{box-shadow:none}.action-strip{display:none!important}details.result-section{display:block!important}details.result-section summary:after{display:none}}
+</style>
+
+<style>
+/* ── v8 시원시원한 대시보드형 결과 화면 ── */
+:root{--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--paper:#ffffff;--soft:#f8fafc;--blue:#2563eb;--navy:#0f2a5f;}
+body{background:linear-gradient(180deg,#f8fafc 0%,#eef2f7 100%);color:var(--ink);}
+.wrap{max-width:1120px;padding:2.2rem 1.35rem;}
+.hd{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:1.25rem;}
+.hd h1{font-size:22px;letter-spacing:-.03em;}
+.hd p{font-size:13px;color:#64748b;}
+.tabs{background:#fff;border:1px solid var(--line);border-radius:18px;padding:6px;box-shadow:0 10px 28px rgba(15,23,42,.06);border-bottom:none;}
+.tab{flex:1;border-radius:13px;margin:0;padding:12px 18px;font-size:14px;border-bottom:none;}
+.tab.on{background:#0f172a;color:#fff;border-bottom:none;box-shadow:0 8px 18px rgba(15,23,42,.18);}
+.card{border-radius:22px;border:1px solid var(--line);box-shadow:0 14px 34px rgba(15,23,42,.06);}
+.b{border-radius:999px;padding:9px 15px;background:#fff;}
+.b.on{background:#0f172a;border-color:#0f172a;color:#fff;}
+.bn,.btn-pdf{border-radius:999px;padding:10px 18px;}
+.result-card{box-shadow:none;border:none;background:transparent;padding:0;}
+.result-hero{border-radius:28px;padding:34px 36px;margin-bottom:18px;background:radial-gradient(circle at 12% 10%,rgba(96,165,250,.75),transparent 28%),linear-gradient(135deg,#06142f 0%,#123b84 55%,#2563eb 100%);box-shadow:0 22px 48px rgba(37,99,235,.22);}
+.result-kicker{font-size:13px;letter-spacing:.12em;}
+.result-title{font-size:30px;letter-spacing:-.04em;margin-bottom:12px;}
+.result-sub{font-size:15px;line-height:1.8;max-width:860px;}
+.summary-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:18px 0;}
+.summary-card{border-radius:22px;padding:20px 22px;box-shadow:0 14px 30px rgba(15,23,42,.06);}
+.summary-label{font-size:12px;color:#475569;}
+.summary-value{font-size:32px;letter-spacing:-.05em;}
+.focus-panel,.result-section{border-radius:24px;padding:24px 26px;box-shadow:0 16px 34px rgba(15,23,42,.055);}
+.focus-title,.section-title{font-size:19px;letter-spacing:-.025em;}
+.focus-desc,.section-note{font-size:13.5px;color:#64748b;}
+.subject-list{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;}
+.subject-pill{border-radius:16px;padding:14px 15px;background:#f8fafc;}
+.area-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:14px;margin-top:14px;}
+.area-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:18px;padding:16px 16px 14px;min-height:116px;}
+.area-title{display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:950;color:#0f172a;margin-bottom:10px;letter-spacing:-.02em;}
+.area-count{font-size:11px;font-weight:900;color:#2563eb;background:#dbeafe;border-radius:999px;padding:4px 8px;}
+.area-subjects{display:flex;flex-wrap:wrap;gap:7px;}
+.area-subjects .tag{margin:0;border-radius:999px;padding:7px 10px;font-size:12px;background:#fff;border:1px solid #e2e8f0;}
+.area-empty{font-size:12px;color:#94a3b8;padding:8px 0;}
+.strategy-box{display:grid;grid-template-columns:1.05fr .95fr;gap:14px;margin-bottom:14px;}
+.strategy-mini{background:#fff;border:1px solid #e2e8f0;border-radius:22px;padding:19px 20px;box-shadow:0 12px 26px rgba(15,23,42,.045);}
+.strategy-mini h3{font-size:17px;margin-bottom:8px;letter-spacing:-.025em;}
+.strategy-mini p{font-size:13.5px;color:#64748b;line-height:1.7;}
+.smart-warning{border-radius:18px;padding:15px 17px;}
+@media(max-width:860px){.wrap{padding:1.2rem .9rem}.hd{display:block}.result-title{font-size:23px}.result-hero{padding:24px}.summary-grid,.strategy-box{grid-template-columns:1fr}.area-grid{grid-template-columns:1fr}.tabs{display:block}.tab{width:100%;margin-bottom:4px}}
+@media print{.strategy-box{grid-template-columns:1fr}.area-grid{grid-template-columns:repeat(2,1fr)}body{background:#fff}.result-hero{background:#fff!important;color:#111!important}}
+</style>
+
+<style>
+/* ===== v10 PRO: 상담용 완성형 UI 확장 ===== */
+:root{--pro-blue:#2563eb;--pro-navy:#0f172a;--pro-green:#16a34a;--pro-orange:#f97316;--pro-purple:#7c3aed;--pro-line:#dbe3ef;--pro-soft:#f8fbff;}
+body{background:linear-gradient(180deg,#f3f7fb 0%,#eef3f9 100%)!important;color:#0f172a!important;}
+.wrap{max-width:1480px!important;width:calc(100% - 40px);padding:18px 0 24px!important;}
+.hd{background:#fff;border:1px solid #dfe7f2;border-radius:22px;padding:20px 24px;margin-bottom:14px!important;box-shadow:0 14px 34px rgba(15,23,42,.06);display:flex;justify-content:space-between;align-items:center;gap:16px}
+.hd h1{font-size:22px!important;letter-spacing:-.03em}.hd p{font-size:13px!important;color:#64748b!important}.mode-badge{box-shadow:none!important}
+.tool-bar{background:#fff;border:1px solid #dfe7f2;border-radius:18px;padding:12px 14px;margin-bottom:12px!important;box-shadow:0 10px 25px rgba(15,23,42,.05)}
+.btn-pdf,.btn-upload,.btn-tmpl,.bn,.brs,.bsk{border-radius:999px!important;font-weight:800!important;padding:9px 16px!important}
+.student-console{display:grid;grid-template-columns:1.25fr 1.75fr;gap:12px;margin-bottom:14px;align-items:stretch}
+.student-card,.teacher-card{background:#fff;border:1px solid #dfe7f2;border-radius:20px;padding:16px;box-shadow:0 12px 28px rgba(15,23,42,.06)}
+.student-title{font-size:14px;font-weight:900;color:#1d4ed8;margin-bottom:10px;display:flex;align-items:center;gap:7px}.student-fields{display:grid;grid-template-columns:110px 1fr 1.2fr;gap:8px}.student-fields input{width:100%;border:1px solid #cfd8e6;background:#f8fafc;border-radius:12px;padding:10px 12px;font-size:14px;outline:none}.student-fields input:focus{border-color:#2563eb;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.12)}.student-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.pro-btn{border:0;border-radius:999px;padding:9px 14px;font-size:13px;font-weight:900;cursor:pointer;background:#2563eb;color:#fff}.pro-btn.secondary{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}.pro-btn.green{background:#16a34a}.pro-btn.orange{background:#f97316}.pro-btn.gray{background:#f1f5f9;color:#334155;border:1px solid #cbd5e1}.pro-btn.danger{background:#fee2e2;color:#b91c1c;border:1px solid #fecaca}.mini-help{font-size:12px;color:#64748b;margin-top:8px;line-height:1.5}.teacher-card{min-height:126px}.teacher-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px}.teacher-title{font-size:14px;font-weight:900;color:#0f172a}.teacher-list{max-height:96px;overflow:auto;border:1px solid #e5e7eb;border-radius:12px;background:#f8fafc}.teacher-row{display:grid;grid-template-columns:70px 1fr 130px 74px 74px;gap:6px;align-items:center;padding:7px 9px;border-bottom:1px solid #e5e7eb;font-size:12px}.teacher-row:last-child{border-bottom:0}.teacher-row b{font-size:13px}.teacher-empty{padding:16px;text-align:center;color:#94a3b8;font-size:12px}.teacher-row button{font-size:11px;padding:5px 8px;border-radius:999px;border:1px solid #cbd5e1;background:#fff;cursor:pointer}
+.tabs{background:#fff;border:1px solid #dfe7f2;border-radius:20px;padding:7px;display:grid!important;grid-template-columns:repeat(3,1fr);gap:8px;box-shadow:0 12px 28px rgba(15,23,42,.05);border-bottom:none!important;margin-bottom:16px!important}.tab{border-radius:15px!important;border:0!important;margin:0!important;padding:14px 18px!important;font-size:14px!important;color:#475569!important}.tab.on{background:#2563eb!important;color:#fff!important;box-shadow:0 12px 24px rgba(37,99,235,.24)}
+.yr-sel{background:#fff;border:1px solid #dfe7f2;border-radius:18px;padding:9px;display:flex!important;gap:8px;width:max-content;box-shadow:0 10px 24px rgba(15,23,42,.04)}.yr-btn{border-radius:999px!important;font-weight:900!important;padding:10px 18px!important}.prog{height:14px!important;background:#dfe7f2!important;border-radius:999px!important;box-shadow:inset 0 1px 2px rgba(0,0,0,.05);margin:12px 0 16px!important}.pf{background:linear-gradient(90deg,#2563eb,#22c55e)!important;position:relative}.pf:after{content:attr(style);display:none}.progress-label{display:flex;justify-content:space-between;align-items:center;margin:0 2px 6px;font-size:13px;color:#475569;font-weight:800}.progress-chip{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:999px;padding:4px 10px}.step-shell{background:#fff;border:1px solid #dfe7f2;border-radius:24px;padding:18px;box-shadow:0 16px 34px rgba(15,23,42,.07);min-height:520px}.step-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:1px solid #e5e7eb;padding-bottom:14px;margin-bottom:14px}.step-no{font-size:13px;font-weight:900;color:#2563eb;background:#eff6ff;border-radius:999px;padding:6px 11px;white-space:nowrap}.step-title{font-size:24px;font-weight:950;letter-spacing:-.04em;line-height:1.25}.step-sub{font-size:14px;color:#64748b;margin-top:6px}.step-viewport{overflow:hidden}.step-actions{display:flex;gap:8px;justify-content:space-between;align-items:center;margin-top:18px}.step-actions .left,.step-actions .right{display:flex;gap:8px;flex-wrap:wrap}.slide-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.choice-group{border:1px solid #e5e7eb;border-radius:18px;background:#f8fafc;padding:12px}.choice-group-title{font-size:13px;font-weight:950;color:#334155;margin-bottom:8px;border-bottom:1px dashed #cbd5e1;padding-bottom:7px}.choice-buttons{display:flex;flex-wrap:wrap;gap:7px}.choice-buttons .b,.step-shell .b{border-radius:999px!important;background:#fff!important;border:1px solid #cbd5e1!important;padding:9px 12px!important;font-size:13px!important;color:#334155!important}.choice-buttons .b.on,.step-shell .b.on{background:#2563eb!important;color:#fff!important;border-color:#2563eb!important;box-shadow:0 8px 18px rgba(37,99,235,.22)}.step-shell textarea{min-height:170px!important;border-radius:18px!important;border:1px solid #cbd5e1!important;background:#f8fafc!important;font-size:15px!important;padding:16px!important}.step-dots{display:flex;gap:6px}.step-dot{width:9px;height:9px;border-radius:999px;background:#cbd5e1}.step-dot.on{width:26px;background:#2563eb}.card{border-radius:24px!important;border:1px solid #dfe7f2!important;box-shadow:0 16px 34px rgba(15,23,42,.07)!important;padding:24px!important}.qt{font-size:24px!important;font-weight:950!important;letter-spacing:-.04em}.qs{font-size:14px!important;color:#64748b!important}.plan-tabs{background:#f1f5f9;border-radius:999px;padding:5px;width:max-content}.plan-tab{border-radius:999px!important;padding:10px 16px!important}.plan-tab.on{box-shadow:0 8px 20px rgba(37,99,235,.25)}
+.subj-grid,.subject-area-stack{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:14px!important;align-items:start}.cmp-row{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important}.cmp-col{min-width:0!important;border-radius:20px!important;padding:14px!important;border:1px solid #dfe7f2!important;background:#fff!important}.cmp-col .subject-area-stack{grid-template-columns:1fr!important;gap:10px!important}.subject-area-card{border:1px solid #dbe3ef!important;border-radius:20px!important;background:linear-gradient(180deg,#ffffff,#f8fbff)!important;overflow:hidden;box-shadow:0 10px 24px rgba(15,23,42,.05)}.subject-area-head{padding:13px 15px!important;background:#f8fafc!important;border-bottom:1px solid #e5e7eb!important;display:flex;justify-content:space-between;align-items:center}.subject-area-head strong{font-size:16px!important;color:#0f172a!important}.subject-area-head span{font-size:12px!important;font-weight:900!important;color:#2563eb!important;background:#eff6ff;border:1px solid #bfdbfe;border-radius:999px;padding:4px 9px}.subject-area-body{padding:12px!important;display:grid!important;grid-template-columns:1fr!important;gap:7px!important}.subject-area-body .subj-btn{width:100%;text-align:left;border-radius:12px!important;background:#fff!important;border:1px solid #d4dce8!important;padding:10px 12px!important;font-size:13px!important;color:#1e293b!important}.subject-area-body .subj-btn.on{background:#2563eb!important;color:#fff!important;border-color:#2563eb!important;font-weight:900!important;box-shadow:0 8px 16px rgba(37,99,235,.22)}
+.fulfill-dashboard{display:grid;grid-template-columns:260px 1fr;gap:16px;margin:14px 0}.donut-card,.recommend-card{background:#fff;border:1px solid #dfe7f2;border-radius:20px;padding:16px;box-shadow:0 10px 26px rgba(15,23,42,.06)}.donut{--p:0;width:150px;height:150px;border-radius:50%;background:conic-gradient(#2563eb calc(var(--p)*1%),#e5e7eb 0);display:flex;align-items:center;justify-content:center;margin:10px auto;position:relative}.donut:before{content:"";position:absolute;width:106px;height:106px;border-radius:50%;background:#fff}.donut b{position:relative;font-size:30px;font-weight:950;color:#1d4ed8}.donut-label{text-align:center;font-weight:900;color:#334155}.recommend-list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.recommend-item{border:1px solid #fed7aa;background:#fff7ed;border-radius:14px;padding:10px;font-size:13px}.recommend-item b{color:#c2410c}.rank-card{border-radius:16px!important;border:1px solid #dfe7f2!important;box-shadow:0 8px 20px rgba(15,23,42,.04)}.meter-bar{height:12px!important}.ring{width:92px!important;height:92px!important;font-size:24px!important}.report-shell{border-radius:26px;overflow:hidden;background:#fff;border:1px solid #dfe7f2;box-shadow:0 18px 42px rgba(15,23,42,.08);margin-top:16px}.report-hero{padding:28px 32px;background:linear-gradient(135deg,#0f172a,#2563eb);color:#fff}.report-kicker{font-size:12px;font-weight:900;color:#bfdbfe;letter-spacing:.12em}.report-title{font-size:30px;font-weight:950;letter-spacing:-.04em;margin-top:6px}.report-sub{font-size:14px;color:#dbeafe;margin-top:8px}.report-body{padding:22px}.report-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}.report-stat{border:1px solid #dfe7f2;border-radius:18px;padding:16px;background:#f8fafc}.report-stat span{display:block;font-size:12px;font-weight:900;color:#64748b}.report-stat b{font-size:30px;color:#1d4ed8}.section-card{border:1px solid #dfe7f2;border-radius:22px;margin:14px 0;background:#fff;overflow:hidden}.section-card-head{padding:16px 18px;background:#f8fafc;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;gap:12px;align-items:center}.section-card-title{font-size:18px;font-weight:950;color:#0f172a}.section-card-note{font-size:13px;color:#64748b;margin-top:4px}.section-mark{border-radius:999px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;padding:5px 10px;font-weight:900;font-size:12px}.area-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;padding:16px}.area-card{border:1px solid #e5e7eb;border-radius:18px;overflow:hidden;background:#fff}.area-title{display:flex;justify-content:space-between;align-items:center;background:#f8fafc;border-bottom:1px solid #e5e7eb;padding:11px 13px;font-weight:950}.area-count{font-size:12px;color:#2563eb;background:#eff6ff;border-radius:999px;padding:3px 8px}.area-subjects{padding:10px;display:flex;flex-wrap:wrap;gap:6px}.tag.tm,.tag.tm2,.tag.tr,.tag.to,.subject-chip{border-radius:999px!important;padding:7px 10px!important;font-weight:900!important}.warning-stack{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.wb{border-radius:18px!important;padding:14px 16px!important}.action-strip{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}.print-only{display:none}.report-only-btn{background:#0f172a!important;color:#fff!important}
+@media(max-width:1180px){.student-console,.layout{grid-template-columns:1fr}.subj-grid,.subject-area-stack{grid-template-columns:repeat(2,1fr)!important}.area-grid{grid-template-columns:repeat(2,1fr)!important}.slide-grid{grid-template-columns:1fr}.fulfill-dashboard{grid-template-columns:1fr}.wrap{width:calc(100% - 24px)}}
+@media(max-width:760px){.student-fields,.teacher-row,.tabs,.report-grid,.warning-stack,.cmp-row{grid-template-columns:1fr!important}.subj-grid,.subject-area-stack,.area-grid{grid-template-columns:1fr!important}.hd{display:block}.wrap{width:calc(100% - 16px)}}
+@media print{.student-console,.tool-bar,.tabs,.yr-sel,.prog,.progress-label,.no-print{display:none!important}.print-report .pr-student{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 14px}.print-report .pr-student div{border:1px solid #cbd5e1;border-radius:8px;padding:8px;font-size:12px}.print-report .pr-student b{display:block;font-size:16px;color:#111827}.print-report .pr-chart{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.print-report .pr-chart div{border:1px solid #cbd5e1;border-radius:8px;padding:8px;background:#f8fafc}.print-report .pr-chart b{font-size:22px;color:#1d4ed8}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="hd">
+  <h1>🎓 동덕여자고등학교 선택과목 상담 도구 <span class="mode-badge" id="modeBadge">편제표 내장</span></h1>
+  <p>2022 개정 교육과정 기준 · 고교학점제 · 2025·2026년 입학생용</p>
+</div>
+
+<!-- 툴바 -->
+<div class="tool-bar">
+  <button class="btn-pdf" onclick="doPrint('student')">🖨 상담결과 PDF 저장</button>
+  <button class="btn-pdf" onclick="doPrint('teacher')">🖨 매트릭스 PDF 저장</button>
+  <span style="width:1px;height:24px;background:#ddd;display:inline-block;"></span>
+  <label class="btn-upload" style="cursor:pointer;" title="시행계획 JSON 파일을 업로드하면 대학별 조건이 반영됩니다">
+    📋 시행계획 JSON 업로드
+    <input type="file" id="jsonInput" accept=".json" multiple style="display:none;" onchange="loadJSONs(this)">
+  </label>
+  <span class="upload-status" id="uploadStatus"></span>
+</div>
+
+
+<div class="student-console no-print">
+  <div class="student-card">
+    <div class="student-title">🧾 학생 상담 정보</div>
+    <div class="student-fields">
+      <input id="stuNo" placeholder="학번">
+      <input id="stuName" placeholder="성명">
+      <input id="stuMemo" placeholder="상담 메모/특이사항">
+    </div>
+    <div class="student-actions">
+      <button class="pro-btn" onclick="saveCurrentFile()">💾 파일로 저장</button>
+      <label class="pro-btn secondary" style="cursor:pointer">📂 파일 불러오기<input type="file" id="stateFile" accept=".json" style="display:none" onchange="loadCurrentFile(this)"></label>
+      <button class="pro-btn green" onclick="saveStudentRecord()">👩‍🏫 학생목록 저장</button>
+      <button class="pro-btn orange" onclick="prepareAndPrintReport()">📄 보고서 PDF</button>
+    </div>
+    <div class="mini-help">상담 중간 저장 파일을 만들거나, 같은 PC의 학생 목록에 저장해 이어서 작업할 수 있습니다.</div>
+  </div>
+  <div class="teacher-card">
+    <div class="teacher-head">
+      <div>
+        <div class="teacher-title">👩‍🏫 교사용 학생 관리</div>
+        <div class="mini-help" style="margin-top:2px">브라우저에 저장된 상담 기록</div>
+      </div>
+      <button class="pro-btn gray" onclick="renderTeacherList()">새로고침</button>
+    </div>
+    <div class="teacher-list" id="teacherList"><div class="teacher-empty">저장된 학생 기록이 없습니다.</div></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" id="ts" onclick="swTab('s')">학생 선택 상담</button>
+  <button class="tab" id="tp" onclick="swTab('p')">📊 충족률·1안/2안/3안</button>
+  <button class="tab" id="tt" onclick="swTab('t')">선생님 참고 매트릭스</button>
+</div>
+
+<div class="pnl on" id="ps">
+  <div class="yr-sel">
+    <button class="yr-btn on" id="y25" onclick="setYear(2025)">2025년 입학 (현 고2)</button>
+    <button class="yr-btn" id="y26" onclick="setYear(2026)">2026년 입학 (현 고1)</button>
+  </div>
+  <div class="prog"><div class="pf" id="pf" style="width:0%"></div></div>
+  <div id="chat"></div>
+</div>
+
+<!-- ★ 충족률·플래너 패널 -->
+<div class="pnl" id="pp">
+  <div class="card">
+    <div class="qt" style="margin-bottom:4px;">📊 대교협 권장과목 충족률 분석</div>
+    <div class="qs">2028학년도 대교협 발표 기준 · 47개 대학 1,189개 학과 데이터 내장</div>
+    <div class="plan-tabs">
+      <button class="plan-tab on" id="ptFulfill" onclick="swPlanTab('fulfill')">충족률 분석</button>
+      <button class="plan-tab" id="ptCompare" onclick="swPlanTab('compare')">1안 / 2안 / 3안 비교</button>
+    </div>
+
+    <!-- 충족률 분석 -->
+    <div class="plan-panel on" id="planFulfill">
+      <div class="sec-ttl">학생이 선택(예정)한 과목에 체크하세요</div>
+      <div class="subj-grid" id="subjGrid"></div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+        <button class="bn" style="font-size:12px;padding:6px 16px;" onclick="calcFulfill()">충족률 계산하기</button>
+        <button class="brs" style="font-size:12px;" onclick="clearSel('single')">초기화</button>
+      </div>
+      <div id="fulfillResult"></div>
+    </div>
+
+    <!-- 1안/2안/3안 비교 -->
+    <div class="plan-panel" id="planCompare">
+      <div style="font-size:12px;color:#888;margin-bottom:10px;">각 안의 과목 선택을 입력하고 비교하세요</div>
+      <div class="cmp-row" id="planCols"></div>
+      <button class="bn" style="font-size:12px;padding:6px 16px;" onclick="calcCompare()">비교 분석하기</button>
+      <div id="compareResult" style="margin-top:12px;"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="pnl" id="pt">
+  <div class="nbox">
+    <strong>📌 2022 개정 교육과정 평가 방식</strong><br>
+    · 일반선택 · 진로선택: <span class="ev e5">5등급 상대평가</span> + 성취도(A~E) 병기<br>
+    · 사회·과학 융합선택: <span class="ev eae">절대평가 A~E</span> (석차등급 미기재)<br>
+    · 체육·예술·과학탐구실험: <span class="ev eac">성취도 A~C만 기재</span><br>
+    · <strong>공유캠퍼스:</strong> 동덕여고(평화통일교육), 서울고(인공지능과 미래사회), 상문고(수학과 논리적 사고)
+  </div>
+  <div class="yr-sel">
+    <button class="yr-btn on" id="ty25" onclick="setTYear(2025)">2025년 입학 (현 고2)</button>
+    <button class="yr-btn" id="ty26" onclick="setTYear(2026)">2026년 입학 (현 고1)</button>
+  </div>
+  <div class="filter-wrap">
+    <select id="crSel" onchange="fltM(this.value)">
+      <option value="">전체 계열 보기</option>
+    </select>
+  </div>
+  <div class="lgd">
+    <span><span class="dot dm"></span> 진로선택 (5등급 상대)</span>
+    <span><span class="dot dr"></span> 일반선택 (5등급 상대)</span>
+    <span><span class="dot do"></span> 융합선택 (절대 A~E)</span>
+    <span><span class="dot df"></span> 공유캠퍼스</span>
+  </div>
+  <div style="overflow-x:auto;" id="matrixWrap">
+    <table class="mt"><thead><tr id="mh"></tr></thead><tbody id="mb"></tbody></table>
+  </div>
+  <div style="margin-top:10px;">
+    <button class="btn-pdf" onclick="doPrint('teacher')">🖨 매트릭스 PDF 저장</button>
+  </div>
+</div>
+</div>
+
+<script>
+var CUR_YEAR = 2025;
+var T_YEAR = 2025;
+var CUSTOM_MODE = false; // CSV 업로드 시 true
+
+// ─── PDF 인쇄 ────────────────────────────────────────────────
+function doPrint(which){
+  var curTab = document.getElementById('pp')&&document.getElementById('pp').classList.contains('on')?'p':(document.getElementById('ps').classList.contains('on')?'s':'t');
+  if(which==='student'){ swTabSilent('s'); }
+  else { swTabSilent('t'); if(!document.getElementById('mb').innerHTML) bldMatrix(''); }
+  setTimeout(function(){
+    window.print();
+    setTimeout(function(){ swTabSilent(curTab); }, 500);
+  }, 200);
+}
+
+function swTabSilent(t){
+  document.getElementById('ts').className='tab'+(t==='s'?' on':'');
+  var tp=document.getElementById('tp');if(tp)tp.className='tab'+(t==='p'?' on':'');
+  document.getElementById('tt').className='tab'+(t==='t'?' on':'');
+  document.getElementById('ps').className='pnl'+(t==='s'?' on':'');
+  var pp=document.getElementById('pp');if(pp)pp.className='pnl'+(t==='p'?' on':'');
+  document.getElementById('pt').className='pnl'+(t==='t'?' on':'');
+}
+
+// ─── 시행계획 JSON 업로드 ────────────────────────────────────
+// JSON 구조: { "updated": "2025-04-30", "universities": [ { "name":"서울대", "depts": [ { "dept":"컴퓨터공학부", "career":["cs","mech"], "core":["물리학","미적분Ⅱ"], "rec":["기하","전자기와 양자"], "note":"진로선택 3개 이상 이수 필수" } ] } ] }
+var UNIV_DATA = null;
+
+function loadJSON(input){
+  var file = input.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      var data = JSON.parse(e.target.result);
+      if(!data.universities || !Array.isArray(data.universities)) throw new Error('올바른 시행계획 JSON 형식이 아닙니다.');
+      mergeUnivData(data);
+      updateUnivBadge();
+      var count = UNIV_DATA.universities.reduce(function(s,u){ return s+(u.depts?u.depts.length:0); },0);
+      document.getElementById('uploadStatus').textContent = '✅ 시행계획 총 '+UNIV_DATA.universities.length+'개 대학 '+count+'개 모집단위 (누적)';
+    } catch(err){
+      document.getElementById('uploadStatus').className = 'upload-err';
+      document.getElementById('uploadStatus').textContent = '❌ 오류: '+err.message;
+    }
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+// 시행계획에서 현재 계열과 매칭되는 대학/학과 찾기
+function getUnivAdvice(cids){
+  if(!UNIV_DATA) return '';
+  var matched = [];
+  UNIV_DATA.universities.forEach(function(u){
+    if(!u.depts) return;
+    u.depts.forEach(function(d){
+      var overlap = (d.career||[]).filter(function(c){ return cids.indexOf(c)>=0; });
+      if(overlap.length === 0) return;
+      matched.push({ univ:u.name, dept:d.dept, core:d.core||[], rec:d.rec||[], note:d.note||'' });
+    });
+  });
+  if(!matched.length) return '';
+  var h = '<div class="rsec" style="margin-top:14px;"><div class="rst">🏫 2028학년도 대학별 과목 조건 (업로드된 시행계획 기준)</div>';
+  h += '<div style="font-size:12px;color:#888;margin-bottom:8px;">선택 계열과 관련된 학과만 표시됩니다.</div>';
+  matched.slice(0,12).forEach(function(m){
+    h += '<div style="background:#f8f8f8;border:1px solid #e0e0dc;border-radius:6px;padding:8px 12px;margin-bottom:6px;font-size:12px;">';
+    h += '<strong>'+m.univ+' — '+m.dept+'</strong><br>';
+    if(m.core.length) h += '핵심: '+m.core.map(function(s){ return '<span class="tag tm" style="font-size:11px;padding:2px 7px;">'+s+'</span>'; }).join('')+'<br>';
+    if(m.rec.length)  h += '권장: '+m.rec.map(function(s){ return '<span class="tag tr" style="font-size:11px;padding:2px 7px;">'+s+'</span>'; }).join('')+'<br>';
+    if(m.note)        h += '<span style="color:#888;">※ '+m.note+'</span>';
+    h += '</div>';
+  });
+  if(matched.length > 12) h += '<div style="font-size:12px;color:#888;">...외 '+(matched.length-12)+'개 모집단위</div>';
+  h += '</div>';
+  return h;
+}
+
+function parseCSVRow(row){
+  var result=[], cur='', inQ=false;
+  for(var i=0;i<row.length;i++){
+    var c=row[i];
+    if(c==='"'){ inQ=!inQ; }
+    else if(c===','&&!inQ){ result.push(cur); cur=''; }
+    else { cur+=c; }
+  }
+  result.push(cur);
+  return result;
+}
+
+
+
+// ─── 진로 계열 ────────────────────────────────────────────
+var CR_GROUPS = [
+  { gname:"🔬 이공계",
+    items:[
+      {id:"mech",   l:"기계·전기전자·항공공학", d:"기계/전기/전자/항공우주/조선/반도체 등 — 물리학 필수, 미적분·기하 중요"},
+      {id:"chem_e", l:"화학·신소재·에너지공학",  d:"화학공학/신소재/에너지/원자력 등 — 화학+물리학, 미적분 중요"},
+      {id:"ce",     l:"건설·건축·환경공학",       d:"건축공학/건설/토목/환경공학 등 — 물리학+수학 중심"},
+      {id:"cs",     l:"컴퓨터·소프트웨어·AI",     d:"컴공/SW/AI/사이버보안 등 — 수학(미적분·기하)+정보 중요"},
+      {id:"bio_e",  l:"바이오·생명·식품공학",     d:"생명공학/식품공학/농생명/의공학 등 — 생명과학+화학 중심"},
+      {id:"phys_s", l:"물리·천문·지구과학",       d:"순수 물리/천문·우주/지구과학 — 물리+수학(미적분·기하) 핵심"},
+      {id:"chem_s", l:"화학·생화학(순수과학)",    d:"화학/생화학/화학교육 — 화학+수학 중심"},
+      {id:"bio_s",  l:"생물·생태·환경과학",       d:"생물학/생태학/해양생물/환경과학 — 생명과학 중심"},
+      {id:"math_s", l:"수학·통계학",              d:"수학/응용수학/통계학 — 수학 전과목 중요"},
+    ]
+  },
+  { gname:"🩺 의약·보건",
+    items:[
+      {id:"med",    l:"의학·치의학·한의학",       d:"의대/치대/한의대 — 생명+화학+수학 모두 중요"},
+      {id:"phar",   l:"약학·한약학",              d:"약학대/한약학 — 화학+생명과학+수학 중요"},
+      {id:"nur",    l:"간호·보건·의료기술",       d:"간호대/보건계열/물리치료/임상병리 등 — 생명과학+화학"},
+      {id:"vet",    l:"수의학·동물자원",          d:"수의대/동물자원학 — 생명과학+화학"},
+      {id:"sport_s",l:"스포츠과학·체육교육",      d:"스포츠과학/체육교육/운동처방 등 — 생명과학+체육 중심"},
+    ]
+  },
+  { gname:"📚 인문·사회",
+    items:[
+      {id:"hum",    l:"국어국문·문예창작",        d:"국문/문예창작/언어학 — 문학·독서·작문 중심"},
+      {id:"eng",    l:"영어영문·통번역",          d:"영문/영어교육/통번역/국제학부 등 — 영어+제2외국어 중요"},
+      {id:"lang",   l:"외국어·지역학",            d:"일어/중어/기타 외국어·지역학 — 제2외국어 필수"},
+      {id:"hist",   l:"역사·고고학·문화유산",     d:"한국사/동양사/서양사/고고학 등 — 역사과목 중심"},
+      {id:"phil",   l:"철학·윤리·종교학",         d:"철학/윤리학/종교학/미학 — 논술+사회 중심"},
+      {id:"soc",    l:"사회학·심리학·사회복지",   d:"사회학/심리학/사회복지/상담 — 사회+수학(통계) 중요"},
+      {id:"poli",   l:"정치외교·행정·법학",       d:"정치외교/행정/법학/공공행정 등"},
+      {id:"econ",   l:"경제·경영·무역·통계",      d:"경제/경영/회계/무역/통계 — 수학(확률통계·미적분) 중요"},
+      {id:"media",  l:"언론·미디어·광고·홍보",    d:"신문방송/미디어커뮤니케이션/광고홍보 등 — 국어+사회+통계"},
+      {id:"geo",    l:"지리학·도시계획·부동산",   d:"지리학/도시계획/부동산 — 지리+사회 중심"},
+      {id:"int",    l:"국제학·국제통상·외교",     d:"국제학/국제통상/외교 — 영어+사회+제2외국어"},
+    ]
+  },
+  { gname:"✏️ 교육·사범",
+    items:[
+      {id:"edu_hum",l:"사범(국어·영어·사회·역사)", d:"국어교육/영어교육/사회교육/역사교육/윤리교육 등"},
+      {id:"edu_sci",l:"사범(수학·과학·정보)",      d:"수학교육/과학교육/물리·화학·생물·지구과학교육/정보교육"},
+      {id:"edu_art",l:"사범(체육·음악·미술)",      d:"체육교육/음악교육/미술교육/가정교육 등"},
+      {id:"edu_gen",l:"교육학·유아교육·특수교육",  d:"교육학/유아교육/초등교육/특수교육 등"},
+    ]
+  },
+  { gname:"🎨 예술·디자인",
+    items:[
+      {id:"art_fin",l:"순수미술·미술교육",        d:"서양화/동양화/조각/판화/미술교육 등"},
+      {id:"design", l:"디자인·영상·패션",         d:"시각디자인/산업디자인/패션/영상/UI·UX 등"},
+      {id:"music",  l:"음악·실용음악",            d:"성악/기악/작곡/실용음악 등"},
+      {id:"theater",l:"연극·영화·방송연예",       d:"연극/영화영상/방송연예/뮤지컬 등"},
+      {id:"arch",   l:"건축학(디자인 계열)",      d:"건축학 5년제(설계 중심) — 수학+물리학+미술적 소양"},
+    ]
+  },
+  { gname:"🏃 기타",
+    items:[
+      {id:"un",     l:"아직 모르겠어",            d:"진로 탐색 중 — 공통과목과 기초 선택 과목 위주로 추천할게"},
+    ]
+  },
+];
+
+var CR = [];
+for(var gi=0;gi<CR_GROUPS.length;gi++)
+  for(var ci=0;ci<CR_GROUPS[gi].items.length;ci++)
+    CR.push(CR_GROUPS[gi].items[ci]);
+
+// ─── 편제표 ────────────────────────────────────────────────
+var SB_ALL = [
+  // 국어
+  {nm:"문학",               a:"국어",t:"일반선택",e:"rel",    yr:"both",tg:["hum","eng","hist","phil","soc","poli","econ","media","int","edu_hum","edu_art","art_fin","design","theater","lang","arch","un"]},
+  {nm:"화법과 언어",        a:"국어",t:"일반선택",e:"rel",    yr:"both",tg:["hum","eng","phil","poli","media","edu_hum","int","soc","lang","arch","un"]},
+  {nm:"독서와 작문",        a:"국어",t:"일반선택",e:"rel",    yr:"both",tg:["hum","eng","hist","phil","poli","media","edu_hum","int","soc","un"]},
+  {nm:"주제 탐구 독서",     a:"국어",t:"진로선택",e:"rel",    yr:"both",tg:["hum","hist","phil","edu_hum","media","poli"]},
+  {nm:"독서 토론과 글쓰기", a:"국어",t:"융합선택",e:"abs_ae", yr:26,    tg:["hum","phil","edu_hum","media","poli"]},
+  {nm:"언어생활 탐구",      a:"국어",t:"융합선택",e:"abs_ae", yr:26,    tg:["hum","lang","edu_hum"]},
+  {nm:"문학과 영상",        a:"국어",t:"진로선택",e:"rel",    yr:26,    tg:["hum","media","theater","art_fin","design"]},
+  {nm:"매체 의사소통",      a:"국어",t:"융합선택",e:"abs_ae", yr:26,    tg:["media","hum","theater","design"]},
+  // 수학
+  {nm:"대수",               a:"수학",t:"일반선택",e:"rel",    yr:"both",tg:["mech","chem_e","ce","cs","bio_e","phys_s","chem_s","bio_s","math_s","med","phar","nur","vet","econ","soc","sport_s","edu_sci","arch","un"]},
+  {nm:"미적분Ⅰ",           a:"수학",t:"일반선택",e:"rel",    yr:"both",tg:["mech","chem_e","ce","cs","phys_s","chem_s","math_s","med","phar","econ","edu_sci","arch"]},
+  {nm:"확률과 통계",        a:"수학",t:"일반선택",e:"rel",    yr:"both",tg:["econ","soc","cs","math_s","med","phar","nur","media","poli","edu_sci","sport_s","un"]},
+  {nm:"미적분Ⅱ",           a:"수학",t:"진로선택",e:"rel",    yr:"both",tg:["mech","phys_s","cs","chem_e","math_s","ce","med","phar","edu_sci"]},
+  {nm:"기하",               a:"수학",t:"진로선택",e:"rel",    yr:25,    tg:["mech","phys_s","cs","ce","math_s","arch","edu_sci"]},
+  {nm:"경제 수학",          a:"수학",t:"진로선택",e:"rel",    yr:25,    tg:["econ","cs","math_s","media"]},
+  {nm:"인공지능 수학",      a:"수학",t:"진로선택",e:"rel",    yr:26,    tg:["cs","mech","math_s","econ"]},
+  {nm:"실용 통계",          a:"수학",t:"융합선택",e:"abs_ae", yr:"both",tg:["econ","soc","cs","math_s","phar","media","sport_s","nur"]},
+  {nm:"수학과 논리적 사고", a:"수학",t:"융합선택",e:"abs_ae", yr:"both",tg:["cs","econ","math_s","un"],campus:true},
+  // 영어
+  {nm:"영어Ⅰ",             a:"영어",t:"일반선택",e:"rel",    yr:"both",tg:["eng","lang","int","edu_hum","hum","un","media"]},
+  {nm:"영어Ⅱ",             a:"영어",t:"일반선택",e:"rel",    yr:"both",tg:["eng","lang","int","edu_hum","hum","media"]},
+  {nm:"영어 독해와 작문",   a:"영어",t:"일반선택",e:"rel",    yr:"both",tg:["eng","lang","int","edu_hum","hum"]},
+  {nm:"심화 영어 독해와 작문",a:"영어",t:"진로선택",e:"rel",  yr:25,    tg:["eng","lang","int","edu_hum"]},
+  {nm:"영어 발표와 토론",   a:"영어",t:"진로선택",e:"rel",    yr:26,    tg:["eng","int","edu_hum","media","poli"]},
+  {nm:"영미 문학 읽기",     a:"영어",t:"진로선택",e:"rel",    yr:26,    tg:["eng","hum","edu_hum","theater"]},
+  {nm:"세계 문화와 영어",   a:"영어",t:"융합선택",e:"abs_ae", yr:26,    tg:["eng","lang","int","un"]},
+  {nm:"심화 영어",          a:"영어",t:"진로선택",e:"rel",    yr:26,    tg:["eng","int","edu_hum"]},
+  // 사회
+  {nm:"세계시민과 지리",    a:"사회",t:"일반선택",e:"rel",    yr:"both",tg:["soc","hum","poli","edu_hum","int","geo","media","un"]},
+  {nm:"세계사",             a:"사회",t:"일반선택",e:"rel",    yr:"both",tg:["hist","hum","poli","edu_hum","int"]},
+  {nm:"사회와 문화",        a:"사회",t:"일반선택",e:"rel",    yr:"both",tg:["soc","edu_hum","hum","media","poli","un"]},
+  {nm:"현대사회와 윤리",    a:"사회",t:"일반선택",e:"rel",    yr:"both",tg:["phil","hum","poli","edu_hum","soc","edu_gen"]},
+  {nm:"한국지리 탐구",      a:"사회",t:"진로선택",e:"rel",    yr:"both",tg:["hist","hum","soc","edu_hum","geo"]},
+  {nm:"동아시아 역사 기행", a:"사회",t:"진로선택",e:"rel",    yr:"both",tg:["hist","hum","lang","edu_hum"]},
+  {nm:"경제",               a:"사회",t:"진로선택",e:"rel",    yr:"both",tg:["econ","poli","soc","media"]},
+  {nm:"정치",               a:"사회",t:"진로선택",e:"rel",    yr:"both",tg:["poli","soc","edu_hum","int","media"]},
+  {nm:"윤리와 사상",        a:"사회",t:"진로선택",e:"rel",    yr:"both",tg:["phil","hum","poli","edu_hum","edu_gen"]},
+  {nm:"법과 사회",          a:"사회",t:"진로선택",e:"rel",    yr:"both",tg:["poli","soc","media","edu_hum"]},
+  {nm:"인문학과 윤리",      a:"사회",t:"진로선택",e:"rel",    yr:"both",tg:["phil","hum","poli","edu_hum","edu_gen"]},
+  {nm:"현대 세계의 변화",   a:"사회",t:"진로선택",e:"rel",    yr:"both",tg:["hist","hum","poli","int"],special:"특목고 선택과목"},
+  {nm:"기후변화와 지속가능한 세계",a:"사회",t:"융합선택",e:"abs_ae",yr:"both",tg:["chem_e","bio_s","soc","geo","edu_hum","un"]},
+  {nm:"사회문제 탐구",      a:"사회",t:"융합선택",e:"abs_ae", yr:"both",tg:["soc","poli","hum","media","edu_hum"]},
+  {nm:"여행지리",           a:"사회",t:"융합선택",e:"abs_ae", yr:"both",tg:["hum","soc","geo","lang","un"]},
+  {nm:"역사로 탐구하는 현대 세계",a:"사회",t:"융합선택",e:"abs_ae",yr:"both",tg:["hist","hum","soc","edu_hum"]},
+  {nm:"금융과 경제생활",    a:"사회",t:"융합선택",e:"abs_ae", yr:"both",tg:["econ","soc","un"]},
+  {nm:"윤리문제 탐구",      a:"사회",t:"융합선택",e:"abs_ae", yr:"both",tg:["phil","hum","poli","edu_hum","edu_gen"]},
+  // 과학
+  {nm:"물리학",             a:"과학",t:"일반선택",e:"rel",    yr:"both",tg:["mech","phys_s","cs","chem_e","ce","arch","sport_s","edu_sci"]},
+  {nm:"화학",               a:"과학",t:"일반선택",e:"rel",    yr:"both",tg:["chem_e","chem_s","med","phar","bio_e","nur","vet","edu_sci"]},
+  {nm:"생명과학",           a:"과학",t:"일반선택",e:"rel",    yr:"both",tg:["bio_e","bio_s","med","phar","nur","vet","chem_s","sport_s","edu_sci","edu_art"]},
+  {nm:"지구과학",           a:"과학",t:"일반선택",e:"rel",    yr:"both",tg:["phys_s","chem_e","bio_s","geo","edu_sci","un"]},
+  {nm:"역학과 에너지",      a:"과학",t:"진로선택",e:"rel",    yr:"both",tg:["mech","phys_s","ce","arch","edu_sci"]},
+  {nm:"물질과 에너지",      a:"과학",t:"진로선택",e:"rel",    yr:"both",tg:["chem_e","chem_s","mech","edu_sci"]},
+  {nm:"세포와 물질대사",    a:"과학",t:"진로선택",e:"rel",    yr:"both",tg:["bio_e","bio_s","med","phar","nur","vet","edu_sci"]},
+  {nm:"지구시스템과학",     a:"과학",t:"진로선택",e:"rel",    yr:"both",tg:["phys_s","chem_e","geo","edu_sci"]},
+  {nm:"전자기와 양자",      a:"과학",t:"진로선택",e:"rel",    yr:"both",tg:["mech","phys_s","cs","edu_sci"]},
+  {nm:"화학 반응의 세계",   a:"과학",t:"진로선택",e:"rel",    yr:"both",tg:["chem_e","chem_s","med","phar","bio_e","edu_sci"]},
+  {nm:"생물의 유전",        a:"과학",t:"진로선택",e:"rel",    yr:"both",tg:["bio_e","bio_s","med","phar","vet","edu_sci"]},
+  {nm:"행성우주과학",       a:"과학",t:"진로선택",e:"rel",    yr:"both",tg:["phys_s","mech","edu_sci"]},
+  {nm:"융합과학 탐구",      a:"과학",t:"융합선택",e:"abs_ae", yr:"both",tg:["phys_s","chem_s","bio_s","un"]},
+  {nm:"기후변화와 환경생태",a:"과학",t:"융합선택",e:"abs_ae", yr:"both",tg:["bio_s","chem_e","soc","geo","un"]},
+  {nm:"과학의 역사와 문화", a:"과학",t:"융합선택",e:"abs_ae", yr:"both",tg:["phys_s","hum","edu_sci","un"]},
+  // 정보
+  {nm:"정보",               a:"정보",t:"일반선택",e:"rel",    yr:"both",tg:["cs","mech","econ","math_s","media","edu_sci","un"]},
+  {nm:"인공지능 기초",      a:"정보",t:"진로선택",e:"rel",    yr:"both",tg:["cs","mech","math_s","edu_sci"]},
+  {nm:"데이터 과학",        a:"정보",t:"진로선택",e:"rel",    yr:"both",tg:["cs","econ","soc","math_s","med","media"]},
+  {nm:"소프트웨어와 생활",  a:"정보",t:"융합선택",e:"abs_ae", yr:"both",tg:["cs","un","media"]},
+  {nm:"인공지능과 미래사회",a:"정보",t:"진로선택",e:"rel",    yr:"both",tg:["cs","mech","econ","math_s"],campus:true},
+  // 교양
+  {nm:"평화통일교육",       a:"교양",t:"진로선택",e:"rel",    yr:"both",tg:["poli","soc","hum","int","edu_hum"],campus:true},
+  {nm:"인간과 철학",        a:"교양",t:"진로선택",e:"rel",    yr:"both",tg:["phil","hum","poli","edu_hum","edu_gen"]},
+  {nm:"생태와 환경",        a:"교양",t:"일반선택",e:"rel",    yr:"both",tg:["bio_s","chem_e","soc","geo","un"]},
+  {nm:"논술",               a:"교양",t:"융합선택",e:"abs_ae", yr:"both",tg:["hum","poli","edu_hum","media","phil","un"]},
+  {nm:"진로와 직업",        a:"교양",t:"일반선택",e:"rel",    yr:"both",tg:["un"]},
+  // 제2외국어
+  {nm:"일본어",             a:"제2외국어",t:"일반선택",e:"rel",yr:"both",tg:["lang","hum","int","un"]},
+  {nm:"중국어",             a:"제2외국어",t:"일반선택",e:"rel",yr:"both",tg:["lang","hum","int","un"]},
+  {nm:"일본 문화",          a:"제2외국어",t:"융합선택",e:"abs_ae",yr:"both",tg:["lang","hum","int"]},
+  {nm:"중국 문화",          a:"제2외국어",t:"융합선택",e:"abs_ae",yr:"both",tg:["lang","hum","int"]},
+  // 체육
+  {nm:"체육1",              a:"체육",t:"일반선택",e:"abs_ac", yr:"both",tg:["sport_s","edu_art","un"]},
+  {nm:"체육2",              a:"체육",t:"일반선택",e:"abs_ac", yr:"both",tg:["sport_s","edu_art","un"]},
+  {nm:"스포츠 생활1",       a:"체육",t:"융합선택",e:"abs_ac", yr:"both",tg:["sport_s","edu_art"]},
+  {nm:"스포츠 생활2",       a:"체육",t:"융합선택",e:"abs_ac", yr:"both",tg:["sport_s","edu_art"]},
+  {nm:"스포츠 문화",        a:"체육",t:"진로선택",e:"abs_ac", yr:"both",tg:["sport_s","edu_art","media"]},
+  {nm:"스포츠 과학",        a:"체육",t:"진로선택",e:"abs_ac", yr:"both",tg:["sport_s","edu_art"]},
+  // 예술
+  {nm:"미술",               a:"예술",t:"일반선택",e:"abs_ac", yr:"both",tg:["art_fin","design","theater","arch","edu_art","un"]},
+  {nm:"음악",               a:"예술",t:"일반선택",e:"abs_ac", yr:"both",tg:["music","theater","edu_art","un"]},
+  {nm:"미술 창작",          a:"예술",t:"진로선택",e:"abs_ac", yr:25,    tg:["art_fin","design","arch"]},
+  {nm:"음악 연주와 창작",   a:"예술",t:"진로선택",e:"abs_ac", yr:25,    tg:["music","theater"]},
+  {nm:"음악 감상과 비평",   a:"예술",t:"진로선택",e:"abs_ac", yr:"both",tg:["music","theater","hum","edu_art","media"]},
+  {nm:"미술 감상과 비평",   a:"예술",t:"진로선택",e:"abs_ac", yr:"both",tg:["art_fin","design","hum","edu_art","media","theater"]},
+  {nm:"음악과 미디어",      a:"예술",t:"융합선택",e:"abs_ac", yr:"both",tg:["music","media","theater","design"]},
+  {nm:"미술과 매체",        a:"예술",t:"융합선택",e:"abs_ac", yr:"both",tg:["art_fin","design","media","theater"]},
+];
+
+var AREAS = ["국어","수학","영어","사회","과학","정보","교양","제2외국어","체육","예술"];
+
+var CMAP = {};
+for(var i=0;i<CR.length;i++) CMAP[CR[i].id] = [CR[i].id];
+
+function getSB(year){
+  return SB_ALL.filter(function(s){ return s.yr==='both'||s.yr===year; });
+}
+
+// ─── 질문 단계 ────────────────────────────────────────────
+// ★ 변경: 진로 multi_career, 전형 → 내신관리 방향 질문 삭제, 걱정 유지
+var STP = [
+  { id:"career",
+    q:"희망하는 진로·학과 계열을 골라봐. 여러 개도 OK!",
+    s:"비슷한 계열을 여러 개 골라도 돼. 고민 중인 선택지를 모두 선택 후 '완료' 버튼을 눌러.",
+    tp:"multi_career" },
+  { id:"int",
+    q:"지금까지 흥미롭거나 재미있었던 과목 영역은?",
+    s:"여러 개 선택 가능. '선택 완료' 버튼 눌러야 다음으로 넘어가.", tp:"multi",
+    ch:["국어·글쓰기·논술","수학","물리","화학","생명·생물","지구과학·환경","사회·역사·지리","경제·정치·법","심리학·사회복지","정보·컴퓨터","영어","제2외국어(일어·중어 등)","음악","미술·디자인","체육·스포츠","기타"] },
+  { id:"hrd",
+    q:"어렵거나 부담스럽게 느껴진 과목은?",
+    s:"여러 개 선택 가능. 없으면 '없음'만 골라.", tp:"multi",
+    ch:["국어","수학","물리","화학","생명·생물","지구과학","사회·역사","경제","정보·컴퓨터","영어","없음"] },
+  { id:"con",
+    q:"과목 선택할 때 가장 걱정되는 게 뭐야?",
+    s:"여러 개 선택 가능.", tp:"multi",
+    ch:["내신 등급이 잘 안 나올까봐","수업이 너무 어려울까봐","친구들이 안 들어서 혼자 남을까봐","진로에 맞는 과목인지 확신이 없어","필수 이수 학점 채우기가 걱정돼","공유캠퍼스 과목 선택을 어떻게 해야 할지 모르겠어","나중에 후회할까봐"] },
+  { id:"mem",
+    q:"지금 가장 고민 중인 상황을 짧게 적어줘.",
+    s:"예) '물리 어려워서 피하고 싶은데 공대 가고 싶어' / '의약 계열 보다가 성적 안 나오면 생명공학도 생각 중' (선택 사항)",
+    tp:"text", ph:"자유롭게 적어봐" },
+];
+
+var ST = { step:0, ans:{}, cids:[], done:false };
+
+// ─── 학년도 전환 ───────────────────────────────────────────
+function setYear(y){
+  CUR_YEAR = y;
+  document.getElementById('y25').className = 'yr-btn'+(y===2025?' on':'');
+  document.getElementById('y26').className = 'yr-btn'+(y===2026?' on':'');
+  rst();
+}
+function setTYear(y){
+  T_YEAR = y;
+  document.getElementById('ty25').className = 'yr-btn'+(y===2025?' on':'');
+  document.getElementById('ty26').className = 'yr-btn'+(y===2026?' on':'');
+  bldFilter(); bldMatrix('');
+}
+
+function swTab(t){
+  swTabSilent(t);
+  if(t==='t'){ bldFilter(); bldMatrix(''); }
+  if(t==='p'){ initPlannerUI(); }
+}
+
+function updProg(){
+  document.getElementById('pf').style.width = Math.min(Math.round(ST.step/STP.length*100),100)+'%';
+}
+
+// ─── 단계 렌더 ────────────────────────────────────────────
+function renderStp(){
+  if(ST.done) return;
+  updProg();
+  if(ST.step >= STP.length){ showRes(); return; }
+  var s = STP[ST.step];
+  if(document.getElementById('st'+ST.step)) return;
+  var d = document.createElement('div');
+  d.className = 'card'; d.id = 'st'+ST.step;
+  var h = '<div class="ql">'+(ST.step+1)+' / '+STP.length+'</div>'
+        + '<div class="qt">'+s.q+'</div>'
+        + '<div class="qs">'+s.s+'</div>';
+
+  if(s.tp === 'multi_career'){
+    // 진로 복수선택 — 그룹별 렌더
+    for(var gi=0;gi<CR_GROUPS.length;gi++){
+      h += '<div class="cg-title">'+CR_GROUPS[gi].gname+'</div><div class="g">';
+      for(var ci=0;ci<CR_GROUPS[gi].items.length;ci++){
+        var crIdx = CR.indexOf(CR_GROUPS[gi].items[ci]);
+        h += '<button class="b" id="ccb'+ST.step+'_'+crIdx+'" data-step="'+ST.step+'" data-cidx="'+crIdx+'" onclick="tgCareer(this)">'+CR[crIdx].l+'</button>';
+      }
+      h += '</div>';
+    }
+    h += '<div class="cdesc" id="cd'+ST.step+'"></div>';
+    h += '<button class="bn" onclick="dnCareer('+ST.step+')">선택 완료 →</button>';
+
+  } else if(s.tp === 'multi'){
+    h += '<div class="g">';
+    for(var k=0;k<s.ch.length;k++){
+      h += '<button class="b" id="mb'+ST.step+'_'+k+'" data-step="'+ST.step+'" data-idx="'+k+'" onclick="tgM(this)">'+s.ch[k]+'</button>';
+    }
+    h += '</div><button class="bn" onclick="dnM('+ST.step+')">선택 완료 →</button>';
+
+  } else {
+    h += '<textarea id="ta'+ST.step+'" placeholder="'+s.ph+'" rows="3"></textarea><br>'
+       + '<button class="bn" onclick="dnT('+ST.step+')">다음 →</button>'
+       + '<button class="bsk" onclick="skS('+ST.step+')">건너뛰기</button>';
+  }
+
+  d.innerHTML = h;
+  document.getElementById('chat').appendChild(d);
+  setTimeout(function(){ d.scrollIntoView({behavior:'smooth',block:'nearest'}); }, 60);
+}
+
+// 진로 복수선택 토글
+function tgCareer(btn){
+  var si  = parseInt(btn.dataset.step);
+  var ci  = parseInt(btn.dataset.cidx);
+  if(!ST.ans[si]) ST.ans[si] = [];
+  var arr = ST.ans[si];
+  var idx = arr.indexOf(ci);
+  if(idx>=0){ arr.splice(idx,1); btn.className='b'; }
+  else { arr.push(ci); btn.className='b on'; }
+  // 설명 업데이트
+  var desc = arr.map(function(i){ return CR[i].l; }).join(' · ');
+  var el = document.getElementById('cd'+si);
+  if(el) el.textContent = desc ? '선택됨: '+desc : '';
+}
+
+function dnCareer(si){
+  var arr = ST.ans[si] || [];
+  if(arr.length === 0){
+    // 선택 안 했으면 '모르겠어'로 처리
+    var unIdx = CR.findIndex(function(c){ return c.id==='un'; });
+    arr = [unIdx >= 0 ? unIdx : 0];
+    ST.ans[si] = arr;
+  }
+  ST.cids = arr.map(function(i){ return CR[i].id; });
+  ST.step++; renderStp();
+}
+
+function tgM(btn){
+  var si = parseInt(btn.dataset.step);
+  var ki = parseInt(btn.dataset.idx);
+  var s  = STP[si];
+  if(!ST.ans[si]) ST.ans[si] = [];
+  var arr = ST.ans[si], val = s.ch[ki], idx = arr.indexOf(val);
+  if(idx>=0){ arr.splice(idx,1); btn.className='b'; }
+  else { arr.push(val); btn.className='b on'; }
+}
+
+function dnM(si){ if(!ST.ans[si]) ST.ans[si]=[]; ST.step++; renderStp(); }
+function dnT(si){ var ta=document.getElementById('ta'+si); ST.ans[si]=ta?ta.value.trim():''; ST.step++; renderStp(); }
+function skS(si){ ST.ans[si]=''; ST.step++; renderStp(); }
+
+// ─── 결과 ─────────────────────────────────────────────────
+function escHTML(v){
+  return String(v||'').replace(/[&<>\"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[ch];});
+}
+function subjectChip(nm, kind, campus){
+  var cls = kind==='진로선택' ? 'tm' : (kind==='일반선택' ? 'tr' : 'to');
+  return '<span class="tag '+cls+'">'+escHTML(nm)+(campus?'<span class="schip">공유캠퍼스</span>':'')+'</span>';
+}
+function subjectCard(nm, kind){
+  var kcls = kind==='진로선택' ? 'kind-career' : (kind==='일반선택' ? 'kind-general' : 'kind-fusion');
+  return '<div class="subject-pill"><span>'+escHTML(nm)+'</span><span class="kind '+kcls+'">'+escHTML(kind)+'</span></div>';
+}
+function showWarn(type, icon, title, body){
+  return '<div class="smart-warning '+type+'"><div class="ico">'+icon+'</div><div><strong>'+title+'</strong>'+body+'</div></div>';
+}
+
+function areaEmoji(ar){
+  return {"국어":"📘","수학":"📐","영어":"🔤","사회":"🌏","과학":"🔬","정보":"💻","교양":"🧭","제2외국어":"🌐","체육":"🏃","예술":"🎨"}[ar] || "📌";
+}
+function areaGroupedHTML(names, opts){
+  opts = opts || {};
+  var source = getSB(CUR_YEAR);
+  var seen = {};
+  names = (names||[]).filter(function(nm){ if(seen[nm]) return false; seen[nm]=true; return true; });
+  var html = '<div class="area-grid">';
+  AREAS.forEach(function(ar){
+    var list = names.map(function(nm){ return source.find(function(s){ return s.nm===nm; }) || SB_ALL.find(function(s){ return s.nm===nm; }); })
+      .filter(function(s){ return s && s.a===ar; });
+    if(!list.length && !opts.showEmpty) return;
+    html += '<div class="area-card"><div class="area-title"><span>'+areaEmoji(ar)+' '+ar+'</span><span class="area-count">'+list.length+'개</span></div>';
+    if(list.length){
+      html += '<div class="area-subjects">';
+      list.forEach(function(s){ html += subjectChip(s.nm, s.t, s.campus); });
+      html += '</div>';
+    }else{ html += '<div class="area-empty">해당 추천 과목 없음</div>'; }
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+// ─── 결과 ─────────────────────────────────────────────────
+function showRes(){
+  ST.done = true;
+  document.getElementById('pf').style.width = '100%';
+
+  var cids = ST.cids.length ? ST.cids : ['un'];
+  var hrds = ST.ans[2] || [];
+  var cons = ST.ans[3] || [];
+  var memo = ST.ans[4] || '';
+  var sb   = getSB(CUR_YEAR);
+
+  var allTags = [];
+  cids.forEach(function(cid){
+    var tags = CMAP[cid]||[cid];
+    tags.forEach(function(t){ if(allTags.indexOf(t)<0) allTags.push(t); });
+  });
+
+  var byCareer = {};
+  cids.forEach(function(cid){
+    var tags = CMAP[cid]||[cid];
+    var must=[], rec=[];
+    sb.forEach(function(s){
+      if(s.e==='abs_ae'||s.e==='abs_ac') return;
+      var match = s.tg.some(function(t){ return tags.indexOf(t)>=0; });
+      if(!match) return;
+      if(s.t==='진로선택') must.push(s.nm);
+      else if(s.t==='일반선택') rec.push(s.nm);
+    });
+    byCareer[cid] = {must:must, rec:rec};
+  });
+
+  var allGradeSubs = [];
+  cids.forEach(function(cid){
+    byCareer[cid].must.concat(byCareer[cid].rec).forEach(function(nm){
+      if(allGradeSubs.indexOf(nm)<0) allGradeSubs.push(nm);
+    });
+  });
+
+  var commonSubs = [], onlySubs = {};
+  allGradeSubs.forEach(function(nm){
+    var presentIn = cids.filter(function(cid){
+      return byCareer[cid].must.indexOf(nm)>=0 || byCareer[cid].rec.indexOf(nm)>=0;
+    });
+    if(presentIn.length === cids.length){ commonSubs.push(nm); }
+    else {
+      presentIn.forEach(function(cid){
+        if(!onlySubs[cid]) onlySubs[cid] = [];
+        if(onlySubs[cid].indexOf(nm)<0) onlySubs[cid].push(nm);
+      });
+    }
+  });
+
+  var fusionSubs = [];
+  sb.forEach(function(s){
+    if(s.t!=='융합선택') return;
+    var match = s.tg.some(function(t){ return allTags.indexOf(t)>=0; });
+    if(match && !fusionSubs.some(function(x){return x.nm===s.nm;})) fusionSubs.push({nm:s.nm, campus:s.campus||false});
+  });
+
+  var phN = cids.some(function(c){ return c==='mech'||c==='phys_s'||c==='ce'; });
+  var phH = hrds.indexOf('물리')>=0;
+  var mhN = cids.some(function(c){ return ['mech','phys_s','chem_e','cs','med','chem_s','math_s','ce','phar'].indexOf(c)>=0; });
+  var mhH = hrds.indexOf('수학')>=0;
+  var bioN= cids.some(function(c){ return ['med','phar','nur','bio_e','bio_s','vet'].indexOf(c)>=0; });
+  var fw  = cons.indexOf('친구들이 안 들어서 혼자 남을까봐')>=0;
+  var dw  = cons.indexOf('진로에 맞는 과목인지 확신이 없어')>=0;
+  var cw  = cons.indexOf('공유캠퍼스 과목 선택을 어떻게 해야 할지 모르겠어')>=0;
+
+  var careerLabels = cids.map(function(cid){ var c = CR.find(function(x){ return x.id===cid; }); return c ? c.l : cid; });
+  var recommendedSubs = [];
+  cids.forEach(function(cid){
+    if(byCareer[cid]) byCareer[cid].must.concat(byCareer[cid].rec).forEach(function(nm){ if(recommendedSubs.indexOf(nm)<0) recommendedSubs.push(nm); });
+  });
+
+  var d = document.createElement('div'); d.className = 'card result-card';
+  var h = '';
+  h += '<div class="result-hero"><div class="result-kicker">SUBJECT CHOICE REPORT · '+CUR_YEAR+'년 입학 기준</div>';
+  h += '<div class="result-title">'+escHTML(careerLabels.join(' · '))+'</div>';
+  h += '<div class="result-sub">교과군별로 과목을 묶고, 먼저 선택할 과목과 상담 때 확인할 과목을 분리했어. 학생도 한눈에 보고 바로 선택 방향을 잡을 수 있어.</div></div>';
+
+  h += '<div class="summary-grid">';
+  h += '<div class="summary-card"><div class="summary-label">우선 확보 과목</div><div class="summary-value">'+(cids.length>1?commonSubs.length:recommendedSubs.length)+'</div><div class="summary-help">진로 변경 가능성을 고려해 먼저 챙길 과목</div></div>';
+  h += '<div class="summary-card"><div class="summary-label">등급 산출 과목</div><div class="summary-value">'+recommendedSubs.length+'</div><div class="summary-help">일반·진로선택 중심으로 관리</div></div>';
+  h += '<div class="summary-card"><div class="summary-label">융합선택 후보</div><div class="summary-value">'+fusionSubs.length+'</div><div class="summary-help">탐색용, 과다 선택은 주의</div></div>';
+  h += '</div>';
+
+  var topList = (cids.length>1 && commonSubs.length) ? commonSubs : recommendedSubs.slice(0,8);
+  h += '<div class="focus-panel"><div class="focus-title">먼저 보면 되는 핵심 과목</div>';
+  h += '<div class="focus-desc">학생 화면에서는 이 영역만 봐도 방향을 잡을 수 있게 구성했어. 아래 세부 목록은 상담 때 펼쳐보면 돼.</div><div class="subject-list">';
+  topList.forEach(function(nm){
+    var s = SB_ALL.find(function(x){ return x.nm===nm; });
+    h += subjectCard(nm, s ? s.t : '추천');
+  });
+  h += '</div></div>';
+
+  h += '<div class="strategy-box">';
+  h += '<div class="strategy-mini"><h3>① 먼저 확보할 것</h3><p>등급이 산출되는 일반선택·진로선택을 우선으로 잡아야 해. 진로가 흔들려도 교과군별 핵심 과목을 확보하면 선택지가 넓어져.</p></div>';
+  h += '<div class="strategy-mini"><h3>② 나중에 더할 것</h3><p>융합선택과 공유캠퍼스 과목은 관심 분야 확장용으로 활용해. 단, 너무 많이 고르면 등급 산출 과목 수가 부족해질 수 있어.</p></div>';
+  h += '</div>';
+
+  h += '<div class="result-section"><div class="section-head"><div><div class="section-title">교과군별 추천 과목</div><div class="section-note">국어·수학·영어·사회·과학처럼 교과군별로 묶어 정렬했어. 학생은 필요한 교과군부터 바로 확인하면 돼.</div></div><span class="section-badge">교과군 정렬</span></div>';
+  h += areaGroupedHTML(recommendedSubs);
+  h += '</div>';
+
+  if(cids.length > 1 && commonSubs.length > 0){
+    h += '<div class="result-section"><div class="section-head"><div><div class="section-title">공통 핵심 과목</div><div class="section-note">여러 계열을 고민할 때 가장 먼저 확보하면 좋은 과목이야.</div></div><span class="section-badge">우선 선택</span></div>';
+    h += areaGroupedHTML(commonSubs);
+    h += '</div>';
+  }
+
+  if(cids.length > 1){
+    h += '<details class="result-section"><summary class="section-head"><div><div class="section-title">계열별 특화 과목</div><div class="section-note">공통 과목을 먼저 잡은 뒤, 관심 계열별로 추가하면 좋은 과목이야.</div></div></summary>';
+    cids.forEach(function(cid){
+      var unique = onlySubs[cid] || [];
+      if(!unique.length) return;
+      var c = CR.find(function(x){ return x.id===cid; });
+      h += '<div style="margin-top:18px;"><div class="rst" style="font-size:14px;color:#0f172a;margin-bottom:8px;">'+escHTML(c?c.l:cid)+'</div>';
+      h += areaGroupedHTML(unique);
+      h += '</div>';
+    });
+    h += '</details>';
+  }
+
+  if(fusionSubs.length > 0){
+    h += '<details class="result-section"><summary class="section-head"><div><div class="section-title">교과군별 융합선택 후보</div><div class="section-note">흥미 탐색에는 좋지만, 등급 산출 과목 수를 먼저 확보해야 안전해.</div></div></summary>';
+    h += areaGroupedHTML(fusionSubs.map(function(s){ return s.nm; }));
+    h += '</details>';
+  }
+
+  h += '<div class="warning-stack">';
+  if(fusionSubs.length > 0) h += showWarn('warn','⚠️','융합선택은 1~2개 이내가 안전해.','<br>석차 등급이 나오지 않아 교과전형이나 일부 학종에서 등급 산출 과목으로 인정되지 않을 수 있어. 일반선택·진로선택을 먼저 확보한 뒤 탐색용으로 선택하는 흐름이 좋아.');
+  if(phN && phH) h += showWarn('danger','⚠️','물리가 부담스럽지만 선택 계열에서는 핵심이야.','<br>공학·물리 계열은 물리학 → 역학과 에너지 → 전자기와 양자 흐름이 중요해. 피하기보다 보완 전략을 세우는 쪽이 안전해.');
+  else if(phN) h += showWarn('info','ℹ️','물리 흐름을 끊지 않는 것이 중요해.','<br>물리학, 역학과 에너지, 전자기와 양자를 이어서 보면 전공 준비도가 잘 드러나.');
+  if(mhN && mhH) h += showWarn('warn','⚠️','수학 부담은 있지만 핵심 과목이야.','<br>이공·의약·경제·통계 계열은 대수, 미적분Ⅰ·Ⅱ, 확률과 통계의 의미가 커. 기초 보완 계획을 같이 세워야 해.');
+  if(bioN && hrds.indexOf('화학')>=0) h += showWarn('warn','⚠️','화학을 완전히 피하기는 어려워.','<br>의약·생명·보건 계열은 생명과학과 화학을 함께 보는 경우가 많아.');
+  if(fw) h += showWarn('warn','👥','친구 선택보다 진로 선택이 먼저야.','<br>고교학점제에서는 학생마다 시간표가 달라지는 것이 자연스러워. 3년 뒤 후회하지 않을 과목을 우선으로 봐야 해.');
+  if(dw) h += showWarn('info','🔍','진로 확신이 낮을 땐 공통 과목을 먼저 확보해.','<br>관심 대학 학과 홈페이지의 권장 과목도 함께 확인하면 선택 근거가 더 명확해져.');
+  if(cw) h += showWarn('good','🏫','공유캠퍼스는 보완 선택지로 활용해.','<br>평화통일교육, 인공지능과 미래사회, 수학과 논리적 사고 등은 관심 분야 확장용으로 검토하면 좋아.');
+  if(cids.length > 1) h += showWarn('good','💡','여러 계열을 고민한다면 공통 과목부터.','<br>공통 핵심 과목을 먼저 확보하고, 각 계열 특화 과목을 1~2개 추가하는 방식이 가장 안정적이야.');
+  if(memo) h += showWarn('good','📝','학생 고민 메모','<br>“'+escHTML(memo)+'”<br>이 내용은 담임·진로 선생님과 상담할 때 바로 활용하면 좋아.');
+  h += '</div>';
+
+  h += getUnivAdvice(cids);
+  if(recommendedSubs.length) h += getFulfillMiniHTML(recommendedSubs);
+
+  h += '<div class="action-strip"><button class="brs" onclick="rst()">처음부터 다시</button><button class="btn-pdf" onclick="doPrint(\'student\')" style="font-size:12px;padding:6px 14px;">🖨 이 결과 PDF 저장</button></div>';
+  d.innerHTML = h;
+  document.getElementById('chat').appendChild(d);
+  setTimeout(function(){ d.scrollIntoView({behavior:'smooth',block:'nearest'}); }, 60);
+}
+
+function rst(){
+  ST = {step:0, ans:{}, cids:[], done:false};
+  document.getElementById('chat').innerHTML = '';
+  document.getElementById('pf').style.width = '0%';
+  renderStp();
+}
+
+// ─── 선생님 매트릭스 ──────────────────────────────────────
+function bldFilter(){
+  var sel = document.getElementById('crSel');
+  sel.innerHTML = '<option value="">전체 계열 보기</option>';
+  CR_GROUPS.forEach(function(g){
+    var og = document.createElement('optgroup');
+    og.label = g.gname;
+    g.items.forEach(function(c){
+      if(c.id==='un') return;
+      var o = document.createElement('option');
+      o.value = c.id; o.textContent = c.l;
+      og.appendChild(o);
+    });
+    sel.appendChild(og);
+  });
+}
+
+function fltM(id){ bldMatrix(id); }
+
+function evH(e){
+  if(e==='rel') return '<span class="ev e5">5등급</span>';
+  if(e==='abs_ae') return '<span class="ev eae">A~E절대</span>';
+  return '<span class="ev eac">A~C</span>';
+}
+
+function bldMatrix(fid){
+  var cols = fid ? CR.filter(function(c){ return c.id===fid; }) : CR.filter(function(c){ return c.id!=='un'; });
+  var mh = document.getElementById('mh');
+  var mb = document.getElementById('mb');
+  var sb = getSB(T_YEAR);
+
+  mh.innerHTML = '<th>과목</th><th>유형</th><th>평가</th>'
+    + cols.map(function(c){ return '<th style="font-size:9px;min-width:52px;writing-mode:vertical-rl;padding:8px 4px;">'+c.l+'</th>'; }).join('');
+  mb.innerHTML = '';
+
+  AREAS.forEach(function(ar){
+    var subs = sb.filter(function(s){ return s.a===ar; });
+    if(!subs.length) return;
+    var ar_row = document.createElement('tr');
+    ar_row.innerHTML = '<td colspan="'+(3+cols.length)+'" class="arow" style="font-size:11px;font-weight:700;color:#666;padding:5px 8px;background:#f7f7f4;">'+ar+'</td>';
+    mb.appendChild(ar_row);
+    subs.forEach(function(sub){
+      var row = document.createElement('tr');
+      var nm = sub.nm+(sub.campus?'<span class="schip">캠퍼스</span>':'');
+      var cells = '<td style="font-size:12px;">'+nm+'</td>'
+                + '<td style="font-size:11px;color:#aaa;white-space:nowrap;">'+sub.t+'</td>'
+                + '<td>'+evH(sub.e)+'</td>';
+      cols.forEach(function(col){
+        var mt2 = CMAP[col.id]||[];
+        var match = sub.tg.some(function(tg){ return mt2.indexOf(tg)>=0; });
+        if(!match){ cells+='<td></td>'; return; }
+        var dc = sub.t==='진로선택'?'dm':(sub.t==='일반선택'?'dr':(sub.campus?'df':'do'));
+        cells += '<td style="text-align:center;"><span class="dot '+dc+'"></span></td>';
+      });
+      row.innerHTML = cells;
+      mb.appendChild(row);
+    });
+  });
+}
+
+// ─── UNIV_DATA 누적 병합 헬퍼 ───────────────────────────────
+function mergeUnivData(newData) {
+  if (!UNIV_DATA) {
+    UNIV_DATA = newData;
+    return;
+  }
+  // 기존 데이터에 병합 — 같은 대학은 depts 합치기 (중복 학과는 덮어쓰기)
+  newData.universities.forEach(function(newU) {
+    var existing = UNIV_DATA.universities.find(function(u){ return u.name === newU.name; });
+    if (!existing) {
+      UNIV_DATA.universities.push(newU);
+    } else {
+      (newU.depts || []).forEach(function(newD) {
+        var exD = existing.depts.find(function(d){ return d.dept === newD.dept; });
+        if (!exD) existing.depts.push(newD);
+        else Object.assign(exD, newD); // 덮어쓰기
+      });
+    }
+  });
+  // updated 날짜는 가장 최신으로
+  if (newData.updated > (UNIV_DATA.updated||'')) UNIV_DATA.updated = newData.updated;
+}
+
+function updateUnivBadge() {
+  if (!UNIV_DATA) return;
+  var count = UNIV_DATA.universities.reduce(function(s,u){ return s+(u.depts?u.depts.length:0); }, 0);
+  document.getElementById('modeBadge').textContent = '시행계획 반영됨 ('+UNIV_DATA.universities.length+'개 대학 · '+count+'개 모집단위)';
+  document.getElementById('modeBadge').className = 'mode-badge custom';
+  document.getElementById('modeBadge').style.display = '';
+}
+
+// ─── 시행계획 JSON — 복수 파일 누적 병합 ────────────────────
+function loadJSONs(input) {
+  var files = Array.from(input.files);
+  if (!files.length) return;
+  var statusEl = document.getElementById('uploadStatus');
+  statusEl.className = 'upload-status';
+  statusEl.textContent = '⏳ JSON '+files.length+'개 읽는 중...';
+  var loaded = 0, errors = [];
+
+  files.forEach(function(file) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        var data = JSON.parse(e.target.result);
+        if (!data.universities || !Array.isArray(data.universities))
+          throw new Error('올바른 형식이 아닙니다: '+file.name);
+        mergeUnivData(data);
+      } catch(err) {
+        errors.push(file.name+': '+err.message);
+      }
+      loaded++;
+      if (loaded === files.length) {
+        if (errors.length) {
+          statusEl.className = 'upload-err';
+          statusEl.textContent = '⚠️ 일부 오류: '+errors.join(' / ');
+        }
+        updateUnivBadge();
+        var count = UNIV_DATA ? UNIV_DATA.universities.reduce(function(s,u){return s+(u.depts?u.depts.length:0);},0) : 0;
+        statusEl.textContent = '✅ 시행계획 총 '+(UNIV_DATA?UNIV_DATA.universities.length:0)+'개 대학 '+count+'개 모집단위 (누적)';
+      }
+    };
+    reader.readAsText(file);
+  });
+}
+
+// ─── 시행계획 PDF — 복수 파일 순차 파싱 후 누적 병합 ────────
+function loadPDFs(input) {
+  var files = Array.from(input.files);
+  if (!files.length) return;
+  var statusEl = document.getElementById('uploadStatus');
+
+  if (typeof pdfjsLib === 'undefined') {
+    statusEl.className = 'upload-err';
+    statusEl.textContent = '❌ PDF.js 로드 실패. 인터넷 연결을 확인해주세요.';
+    return;
+  }
+  var LOCAL_WORKER = 'pdf.worker.min.js';
+  var CDN_WORKER   = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  fetch(LOCAL_WORKER,{method:'HEAD'})
+    .then(function(r){ pdfjsLib.GlobalWorkerOptions.workerSrc = r.ok ? LOCAL_WORKER : CDN_WORKER; })
+    .catch(function(){ pdfjsLib.GlobalWorkerOptions.workerSrc = CDN_WORKER; });
+
+  statusEl.className = 'upload-status';
+  statusEl.textContent = '⏳ PDF '+files.length+'개 처리 중 (1/'+files.length+')...';
+
+  var loaded = 0, errors = [];
+
+  function processFile(file, idx) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      pdfjsLib.getDocument({data: new Uint8Array(e.target.result)}).promise.then(function(pdf) {
+        var pages = [], chain = Promise.resolve();
+        for (var i = 1; i <= pdf.numPages; i++) {
+          (function(pn){
+            chain = chain.then(function(){
+              return pdf.getPage(pn).then(function(page){
+                return page.getTextContent().then(function(tc){
+                  pages.push(tc.items.map(function(it){return it.str;}).join(' '));
+                });
+              });
+            });
+          })(i);
+        }
+        chain.then(function(){
+          var parsed = parsePDFText(pages.join('\n'));
+          if (parsed && parsed.universities.length) {
+            mergeUnivData(parsed);
+          } else {
+            errors.push(file.name+': 파싱 실패');
+          }
+          loaded++;
+          statusEl.textContent = '⏳ PDF 처리 중 ('+(loaded+1)+'/'+files.length+')...';
+          if (loaded === files.length) {
+            updateUnivBadge();
+            var count = UNIV_DATA ? UNIV_DATA.universities.reduce(function(s,u){return s+(u.depts?u.depts.length:0);},0):0;
+            var msg = '✅ 시행계획 PDF 총 '+(UNIV_DATA?UNIV_DATA.universities.length:0)+'개 대학 '+count+'개 모집단위 (누적)';
+            if (errors.length) msg += ' / ⚠️ '+errors.join(', ');
+            statusEl.textContent = msg;
+          }
+        });
+      }).catch(function(err){
+        errors.push(file.name+': '+err.message);
+        loaded++;
+        if (loaded === files.length) { updateUnivBadge(); }
+      });
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  files.forEach(function(file, idx){ processFile(file, idx); });
+}
+
+renderStp();
+
+
+// ─── 대교협 권장과목 데이터 (2028학년도) ─────────────────────
+var UNIV_DB = [{"u":"가톨릭대","d":"인문사회계열","c":["사회"],"r":[]},{"u":"가톨릭대","d":"국어국문학과","c":["사회"],"r":[]},{"u":"가톨릭대","d":"철학과","c":["사회"],"r":[]},{"u":"가톨릭대","d":"국사학과","c":["사회"],"r":[]},{"u":"가톨릭대","d":"영어영문학부","c":["사회"],"r":[]},{"u":"가톨릭대","d":"중국언어문화학과","c":["사회"],"r":[]},{"u":"가톨릭대","d":"일어일본문화학과","c":["사회"],"r":[]},{"u":"가톨릭대","d":"프랑스어문화학과","c":["사회"],"r":[]},{"u":"가톨릭대","d":"국제학부","c":["사회"],"r":[]},{"u":"가톨릭대","d":"법학과","c":["사회"],"r":[]},{"u":"가톨릭대","d":"아동학과","c":["사회"],"r":[]},{"u":"가톨릭대","d":"신학과","c":["사회"],"r":[]},{"u":"가톨릭대","d":"사회복지학과","c":["확률과통계","사회"],"r":[]},{"u":"가톨릭대","d":"심리학과","c":["확률과통계","사회"],"r":[]},{"u":"가톨릭대","d":"사회학과","c":["확률과통계","사회"],"r":[]},{"u":"가톨릭대","d":"경영학과","c":["확률과통계","사회"],"r":[]},{"u":"가톨릭대","d":"회계학과","c":["확률과통계","사회"],"r":[]},{"u":"가톨릭대","d":"경제학과","c":["확률과통계","사회"],"r":[]},{"u":"가톨릭대","d":"행정학과","c":["확률과통계","사회"],"r":[]},{"u":"가톨릭대","d":"물리학과","c":["물리학"],"r":[]},{"u":"가톨릭대","d":"컴퓨터정보공학부","c":["물리학"],"r":[]},{"u":"가톨릭대","d":"인공지능학과","c":["물리학"],"r":[]},{"u":"가톨릭대","d":"화학과","c":["화학"],"r":[]},{"u":"가톨릭대","d":"정보통신전자공학부","c":["물리학","화학"],"r":[]},{"u":"가톨릭대","d":"에너지환경공학과","c":["물리학","화학"],"r":[]},{"u":"가톨릭대","d":"식품영양학과","c":["화학","생명과학"],"r":[]},{"u":"가톨릭대","d":"생명공학과","c":["화학","생명과학"],"r":[]},{"u":"가톨릭대","d":"바이오메디컬화학공학과","c":["화학","생명과학"],"r":[]},{"u":"가톨릭대","d":"의생명과학과","c":["화학","생명과학"],"r":[]},{"u":"가톨릭대","d":"바이오로직스공학부","c":["화학","생명과학"],"r":[]},{"u":"가톨릭대","d":"AI의공학과","c":["화학","생명과학"],"r":[]},{"u":"가톨릭대","d":"약학과","c":["화학","생명과학"],"r":[]},{"u":"가톨릭대","d":"간호학과","c":["화학","생명과학"],"r":[]},{"u":"가톨릭대","d":"의예과","c":["화학","생명과학"],"r":[]},{"u":"건국대","d":"인문","c":["국어","영어","사회"],"r":[]},{"u":"건국대","d":"인문","c":["국어","영어","사회"],"r":[]},{"u":"건국대","d":"사회과학","c":["미적분Ⅰ","대수","확률과통계","국어","사회"],"r":[]},{"u":"건국대","d":"사회과학","c":["미적분Ⅰ","대수","확률과통계","국어","사회"],"r":[]},{"u":"건국대","d":"사회과학","c":["미적분Ⅰ","대수","확률과통계","국어","사회"],"r":[]},{"u":"건국대","d":"이학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"건국대","d":"건축","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"건국대","d":"생명","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"건국대","d":"생명","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"건국대","d":"생명","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"건국대","d":"공학","c":["물리학","미적분Ⅱ","미적분Ⅰ","기하","대수"],"r":[]},{"u":"경희대","d":"수학","c":["미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"경희대","d":"수학","c":["미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"경희대","d":"컴퓨터","c":["미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":["인공지능수학"]},{"u":"경희대","d":"컴퓨터","c":["미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":["인공지능수학"]},{"u":"경희대","d":"컴퓨터","c":["미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":["인공지능수학"]},{"u":"경희대","d":"산업","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"경희대","d":"물리","c":["물리학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":["화학"]},{"u":"경희대","d":"물리","c":["물리학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":["화학"]},{"u":"경희대","d":"기계","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":["화학"]},{"u":"경희대","d":"전기·전자","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"경희대","d":"전기·전자","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"경희대","d":"전기·전자","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"경희대","d":"전기·전자","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"경희대","d":"건설/건축","c":["물리학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":["기하"]},{"u":"경희대","d":"건설/건축","c":["물리학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":["기하"]},{"u":"경희대","d":"건설/건축","c":["미적분Ⅰ","대수","확률과통계"],"r":["물리학","미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"경희대","d":"화학","c":["화학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":["물리학","생명과학","기하"]},{"u":"경희대","d":"화학","c":["화학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":["물리학","생명과학","기하"]},{"u":"경희대","d":"재료/화공·고분자·에너지","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":["화학"]},{"u":"경희대","d":"재료/화공·고분자·에너지","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":["화학"]},{"u":"경희대","d":"재료/화공·고분자·에너지","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":["기하"]},{"u":"경희대","d":"생명과학·환경/생활과학/농림","c":["화학","생명과학","미적분Ⅰ","대수","확률과통계"],"r":["물리학","미적분Ⅱ","미적분Ⅰ"]},{"u":"경희대","d":"생명과학·환경/생활과학/농림","c":["화학","생명과학","미적분Ⅰ","대수","확률과통계"],"r":["물리학","미적분Ⅱ","미적분Ⅰ"]},{"u":"경희대","d":"생명과학·환경/생활과학/농림","c":["화학","생명과학","미적분Ⅰ","대수","확률과통계"],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"경희대","d":"생명과학·환경/생활과학/농림","c":["화학","생명과학","미적분Ⅰ","대수","확률과통계"],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"경희대","d":"생명과학·환경/생활과학/농림","c":["화학","생명과학","미적분Ⅰ","대수","확률과통계"],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"경희대","d":"생명과학·환경/생활과학/농림","c":["화학","생명과학","미적분Ⅰ","대수","확률과통계"],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"경희대","d":"생명과학·환경/생활과학/농림","c":["화학","생명과학","미적분Ⅰ","대수","확률과통계"],"r":["미적분Ⅱ","미적분Ⅰ"]},{"u":"경희대","d":"천문·지구","c":["지구과학","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"경희대","d":"천문·지구","c":["물리학","화학","지구과학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":["기하"]},{"u":"경희대","d":"의학","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":["물리학"]},{"u":"경희대","d":"의학","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":["물리학","화학"]},{"u":"경희대","d":"의학","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":["물리학","화학"]},{"u":"경희대","d":"약학","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":["물리학"]},{"u":"경희대","d":"약학","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":["물리학"]},{"u":"경희대","d":"약학","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":["물리학"]},{"u":"경희대","d":"간호/보건","c":["생명과학","미적분Ⅰ","대수","확률과통계"],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"생명과학대학","c":[],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"생명과학대학","c":[],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"생명과학대학","c":[],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"생명과학대학","c":[],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"이과대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"고려대","d":"이과대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"이과대학","c":[],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"이과대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"공과대학","c":[],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"공과대학","c":[],"r":["화학","미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"고려대","d":"공과대학","c":[],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"공과대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"공과대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"공과대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"공과대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"공과대학","c":[],"r":["화학","미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"고려대","d":"공과대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"공과대학","c":[],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"공과대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"의과대학","c":[],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"사범대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"사범대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"고려대","d":"간호대학","c":[],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"정보대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"고려대","d":"정보대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"고려대","d":"정보대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"고려대","d":"보건과학대학","c":[],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"보건과학대학","c":[],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"보건과학대학","c":[],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"고려대","d":"스마트보안학부","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"고려대","d":"스마트보안학부","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"고려대","d":"스마트모빌리티학부","c":[],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"광운대","d":"전자정보공과대학","c":["물리학","화학","미적분Ⅰ","대수","확률과통계","정보"],"r":["화학","미적분Ⅱ","미적분Ⅰ","기하","인공지능수학"]},{"u":"광운대","d":"전자정보공과대학","c":["물리학","화학","미적분Ⅰ","대수","확률과통계","정보"],"r":["화학","미적분Ⅱ","미적분Ⅰ","기하","인공지능수학"]},{"u":"광운대","d":"전자정보공과대학","c":["물리학","화학","미적분Ⅰ","대수","확률과통계","정보"],"r":["화학","미적분Ⅱ","미적분Ⅰ","기하","인공지능수학"]},{"u":"광운대","d":"전자정보공과대학","c":["물리학","화학","미적분Ⅰ","대수","확률과통계","정보"],"r":["화학","미적분Ⅱ","미적분Ⅰ","기하","인공지능수학"]},{"u":"광운대","d":"전자정보공과대학","c":["물리학","화학","미적분Ⅰ","대수","확률과통계","정보"],"r":["화학","미적분Ⅱ","미적분Ⅰ","기하","인공지능수학"]},{"u":"광운대","d":"전자정보공과대학","c":["물리학","화학","미적분Ⅰ","대수","확률과통계","정보"],"r":["화학","미적분Ⅱ","미적분Ⅰ","기하","인공지능수학"]},{"u":"광운대","d":"인공지능융합대학","c":["물리학","미적분Ⅰ","대수","확률과통계","정보"],"r":["미적분Ⅱ","미적분Ⅰ","기하","인공지능수학"]},{"u":"광운대","d":"인공지능융합대학","c":["물리학","미적분Ⅰ","대수","확률과통계","정보"],"r":["미적분Ⅱ","미적분Ⅰ","기하","인공지능수학"]},{"u":"광운대","d":"인공지능융합대학","c":["물리학","미적분Ⅰ","대수","확률과통계","정보"],"r":["미적분Ⅱ","미적분Ⅰ","기하","인공지능수학"]},{"u":"광운대","d":"인공지능융합대학","c":["물리학","미적분Ⅰ","대수","확률과통계","정보"],"r":["미적분Ⅱ","미적분Ⅰ","기하","인공지능수학"]},{"u":"광운대","d":"공과대학","c":["물리학","화학","생명과학","미적분Ⅰ","대수","확률과통계","정보"],"r":["화학","미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"광운대","d":"공과대학","c":["물리학","화학","생명과학","미적분Ⅰ","대수","확률과통계","정보"],"r":["화학","미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"광운대","d":"공과대학","c":["물리학","화학","생명과학","미적분Ⅰ","대수","확률과통계","정보"],"r":["화학","미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"광운대","d":"공과대학","c":["물리학","화학","생명과학","미적분Ⅰ","대수","확률과통계","정보"],"r":["화학","미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"광운대","d":"자연과학대학 (스포츠융합과학과 제외)","c":["물리학","화학","생명과학","미적분Ⅰ","대수","확률과통계"],"r":["화학","미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"광운대","d":"자연과학대학 (스포츠융합과학과 제외)","c":["물리학","화학","생명과학","미적분Ⅰ","대수","확률과통계"],"r":["화학","미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"광운대","d":"자연과학대학 (스포츠융합과학과 제외)","c":["물리학","화학","생명과학","미적분Ⅰ","대수","확률과통계"],"r":["화학","미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"광운대","d":"인문사회과학대학","c":["미적분Ⅰ","대수","확률과통계","국어","사회","윤리"],"r":["영어","윤리"]},{"u":"광운대","d":"인문사회과학대학","c":["미적분Ⅰ","대수","확률과통계","국어","사회","윤리"],"r":["영어","윤리"]},{"u":"광운대","d":"인문사회과학대학","c":["미적분Ⅰ","대수","확률과통계","국어","사회","윤리"],"r":["영어","윤리"]},{"u":"광운대","d":"인문사회과학대학","c":["미적분Ⅰ","대수","확률과통계","국어","사회","윤리"],"r":["영어","윤리"]},{"u":"광운대","d":"인문사회과학대학","c":["미적분Ⅰ","대수","확률과통계","국어","사회","윤리"],"r":["영어","윤리"]},{"u":"광운대","d":"정책법학대학","c":["영어","사회","지리","윤리"],"r":["영어","사회","윤리"]},{"u":"광운대","d":"정책법학대학","c":["영어","사회","지리","윤리"],"r":["영어","사회","윤리"]},{"u":"광운대","d":"정책법학대학","c":["영어","사회","지리","윤리"],"r":["영어","사회","윤리"]},{"u":"광운대","d":"경영대학","c":["미적분Ⅰ","대수","확률과통계","국어","영어","사회","지리","윤리"],"r":["기하","영어","사회","윤리","인공지능수학"]},{"u":"광운대","d":"경영대학","c":["미적분Ⅰ","대수","확률과통계","국어","영어","사회","지리","윤리"],"r":["기하","영어","사회","윤리","인공지능수학"]},{"u":"광운대","d":"경영대학","c":["미적분Ⅰ","대수","확률과통계","국어","영어","사회","지리","윤리"],"r":["기하","영어","사회","윤리","인공지능수학"]},{"u":"국민대","d":"글로벌인문·지역대학","c":["국어"],"r":["국어"]},{"u":"국민대","d":"글로벌인문·지역대학","c":["한국사"],"r":["지리"]},{"u":"국민대","d":"사회과학대학","c":["사회"],"r":["확률과통계","사회"]},{"u":"국민대","d":"사회과학대학","c":[],"r":["확률과통계"]},{"u":"국민대","d":"사회과학대학","c":[],"r":["영어"]},{"u":"국민대","d":"사회과학대학","c":[],"r":["역사"]},{"u":"국민대","d":"경상대학","c":["미적분Ⅰ","확률과통계"],"r":[]},{"u":"국민대","d":"경상대학","c":["미적분Ⅰ","확률과통계"],"r":[]},{"u":"국민대","d":"경영대학","c":["확률과통계"],"r":[]},{"u":"국민대","d":"경영대학","c":["확률과통계"],"r":[]},{"u":"국민대","d":"경영대학","c":["확률과통계"],"r":["미적분Ⅰ"]},{"u":"국민대","d":"경영대학","c":["확률과통계"],"r":["미적분Ⅰ"]},{"u":"국민대","d":"경영대학","c":["확률과통계"],"r":["미적분Ⅰ"]},{"u":"국민대","d":"창의공과대학","c":["물리학","화학","미적분Ⅰ"],"r":["기하"]},{"u":"국민대","d":"창의공과대학","c":["물리학","화학","미적분Ⅰ"],"r":["기하"]},{"u":"국민대","d":"창의공과대학","c":["물리학","화학","미적분Ⅰ"],"r":["기하"]},{"u":"국민대","d":"창의공과대학","c":["물리학","미적분Ⅰ"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"국민대","d":"창의공과대학","c":["물리학","미적분Ⅱ","미적분Ⅰ","대수"],"r":["화학","확률과통계"]},{"u":"국민대","d":"창의공과대학","c":["물리학","미적분Ⅰ","대수"],"r":["미적분Ⅱ","미적분Ⅰ"]},{"u":"국민대","d":"창의공과대학","c":["물리학","미적분Ⅰ","대수"],"r":["미적분Ⅱ","미적분Ⅰ"]},{"u":"국민대","d":"창의공과대학","c":["물리학","미적분Ⅰ","대수"],"r":["미적분Ⅱ","미적분Ⅰ"]},{"u":"국민대","d":"창의공과대학","c":["물리학","미적분Ⅰ","대수"],"r":["미적분Ⅱ","미적분Ⅰ"]},{"u":"국민대","d":"소프트웨어융합대학","c":["미적분Ⅰ","확률과통계"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"국민대","d":"소프트웨어융합대학","c":["미적분Ⅰ","확률과통계"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"국민대","d":"자동차융합대학","c":["물리학","미적분Ⅰ"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"국민대","d":"자동차융합대학","c":["물리학","미적분Ⅰ"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"국민대","d":"과학기술대학","c":["화학","생명과학","미적분Ⅰ","확률과통계"],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"국민대","d":"과학기술대학","c":["물리학","미적분Ⅰ","대수"],"r":[]},{"u":"국민대","d":"과학기술대학","c":["화학","미적분Ⅰ"],"r":["화학","인공지능수학"]},{"u":"국민대","d":"과학기술대학","c":["화학","생명과학"],"r":["화학"]},{"u":"국민대","d":"과학기술대학","c":["미적분Ⅰ","대수","확률과통계"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"국민대","d":"건축대학","c":["물리학","미적분Ⅰ","대수"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"덕성여대","d":"글로벌융합대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"덕성여대","d":"글로벌융합대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"덕성여대","d":"약학대학","c":["화학","생명과학"],"r":[]},{"u":"동국대","d":"불교","c":["역사","윤리"],"r":["사회","지리"]},{"u":"동국대","d":"문과","c":["사회","역사"],"r":[]},{"u":"동국대","d":"문과","c":["국어"],"r":["사회","역사"]},{"u":"동국대","d":"문과","c":["국어","영어"],"r":["사회","역사"]},{"u":"동국대","d":"문과","c":["국어"],"r":[]},{"u":"동국대","d":"문과","c":["국어"],"r":[]},{"u":"동국대","d":"문과","c":["국어","윤리"],"r":[]},{"u":"동국대","d":"문과","c":["국어","역사"],"r":["사회","지리","윤리"]},{"u":"동국대","d":"법과","c":["국어","사회"],"r":["윤리"]},{"u":"동국대","d":"사회과학","c":["사회"],"r":["역사","지리","윤리"]},{"u":"동국대","d":"사회과학","c":["사회"],"r":["역사","지리","윤리"]},{"u":"동국대","d":"사회과학","c":["사회"],"r":["역사","지리","윤리"]},{"u":"동국대","d":"사회과학","c":["사회"],"r":["역사","지리","윤리"]},{"u":"동국대","d":"사회과학","c":["사회"],"r":["역사","지리","윤리"]},{"u":"동국대","d":"경찰사법","c":["사회"],"r":["역사","지리","윤리"]},{"u":"동국대","d":"경영","c":["영어"],"r":["사회"]},{"u":"동국대","d":"사범","c":["사회"],"r":["역사","지리","윤리"]},{"u":"동국대","d":"사범","c":["국어"],"r":["사회","역사","지리","윤리"]},{"u":"동국대","d":"사범","c":["역사"],"r":["사회","지리","윤리"]},{"u":"동국대","d":"사범","c":["지리"],"r":["사회","역사","윤리"]},{"u":"동국대","d":"사범","c":["화학"],"r":["생명과학","사회","정보"]},{"u":"동국대","d":"예술","c":[],"r":["사회","역사","지리","윤리"]},{"u":"동국대","d":"예술","c":[],"r":["사회","역사","지리","윤리"]},{"u":"동국대","d":"열린전공학부(인문)","c":["국어","영어"],"r":["국어","사회","역사","지리","윤리"]},{"u":"동국대","d":"이과","c":["물리학","화학"],"r":["생명과학"]},{"u":"동국대","d":"이과","c":["물리학","화학"],"r":[]},{"u":"동국대","d":"바이오시스템","c":["화학","생명과학"],"r":[]},{"u":"동국대","d":"바이오시스템","c":["화학","생명과학"],"r":[]},{"u":"동국대","d":"바이오시스템","c":["화학","생명과학"],"r":["지구과학"]},{"u":"동국대","d":"바이오시스템","c":["화학","생명과학"],"r":["물리학"]},{"u":"동국대","d":"바이오시스템","c":["물리학","화학"],"r":["생명과학"]},{"u":"동국대","d":"공과","c":["물리학","화학"],"r":[]},{"u":"동국대","d":"공과","c":["물리학","화학"],"r":[]},{"u":"동국대","d":"공과","c":["물리학","화학"],"r":[]},{"u":"동국대","d":"공과","c":["물리학"],"r":[]},{"u":"동국대","d":"공과","c":["물리학"],"r":[]},{"u":"동국대","d":"공과","c":["물리학","화학"],"r":["지구과학"]},{"u":"동국대","d":"공과","c":["물리학","화학"],"r":["생명과학"]},{"u":"동국대","d":"공과","c":[],"r":["물리학"]},{"u":"동국대","d":"첨단융합","c":["물리학","화학"],"r":[]},{"u":"동국대","d":"첨단융합","c":["물리학"],"r":[]},{"u":"동국대","d":"첨단융합","c":["물리학"],"r":[]},{"u":"동국대","d":"약학","c":["화학","생명과학"],"r":["물리학"]},{"u":"동국대","d":"열린전공학부(자연)","c":[],"r":["물리학","화학"]},{"u":"서울과기대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"공과대학","c":["물리학","화학","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"공과대학","c":["화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"서울과기대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"정보통신대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"정보통신대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"정보통신대학","c":["물리학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"정보통신대학","c":["물리학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"에너지바이오대학","c":["물리학","화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"에너지바이오대학","c":["물리학","화학","생명과학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"에너지바이오대학","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"에너지바이오대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"에너지바이오대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"에너지바이오대학","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"기술경영융합대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"기술경영융합대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"기술경영융합대학","c":["물리학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"기술경영융합대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"창의융합대학","c":["물리학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"창의융합대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"서울과기대","d":"창의융합대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"서울대","d":"인문대학","c":["국어"],"r":[]},{"u":"서울대","d":"인문대학","c":["국어"],"r":[]},{"u":"서울대","d":"인문대학","c":["국어"],"r":[]},{"u":"서울대","d":"인문대학","c":["국어"],"r":[]},{"u":"서울대","d":"인문대학","c":["국어"],"r":[]},{"u":"서울대","d":"인문대학","c":["국어"],"r":[]},{"u":"서울대","d":"인문대학","c":["국어"],"r":[]},{"u":"서울대","d":"인문대학","c":["국어"],"r":[]},{"u":"서울대","d":"인문대학","c":["국어"],"r":[]},{"u":"서울대","d":"인문대학","c":["국어"],"r":[]},{"u":"서울대","d":"인문대학","c":["국어"],"r":[]},{"u":"서울대","d":"인문대학","c":["국어"],"r":[]},{"u":"서울대","d":"인문대학","c":["국어"],"r":[]},{"u":"서울대","d":"인문대학","c":["국어"],"r":[]},{"u":"서울대","d":"사회과학대학","c":["국어"],"r":[]},{"u":"서울대","d":"사회과학대학","c":["국어"],"r":[]},{"u":"서울대","d":"사회과학대학","c":["국어"],"r":[]},{"u":"서울대","d":"사회과학대학","c":["국어"],"r":[]},{"u":"서울대","d":"사회과학대학","c":["국어"],"r":[]},{"u":"서울대","d":"사회과학대학","c":["국어"],"r":[]},{"u":"서울대","d":"사회과학대학","c":["국어"],"r":[]},{"u":"서울대","d":"사회과학대학","c":["국어"],"r":[]},{"u":"서울대","d":"경영대학","c":["국어"],"r":[]},{"u":"서울대","d":"농업생명과학대학","c":["국어"],"r":[]},{"u":"서울대","d":"사범대학","c":["국어"],"r":[]},{"u":"서울대","d":"사범대학","c":["국어"],"r":[]},{"u":"서울대","d":"사범대학","c":["국어"],"r":[]},{"u":"서울대","d":"사범대학","c":["국어"],"r":[]},{"u":"서울대","d":"사범대학","c":["국어"],"r":[]},{"u":"서울대","d":"사범대학","c":["국어"],"r":[]},{"u":"서울대","d":"사범대학","c":["국어"],"r":[]},{"u":"서울대","d":"사범대학","c":["국어"],"r":[]},{"u":"서울대","d":"사범대학","c":["국어"],"r":[]},{"u":"서울대","d":"생활과학대학","c":["국어"],"r":[]},{"u":"서울대","d":"생활과학대학","c":["국어"],"r":[]},{"u":"서울대","d":"생활과학대학","c":["국어"],"r":[]},{"u":"서울대","d":"생활과학대학","c":["국어"],"r":[]},{"u":"서울대","d":"자연과학대학","c":["물리학"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"자연과학대학","c":["지구과학"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"자연과학대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"자연과학대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"자연과학대학","c":["화학"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"자연과학대학","c":["생명과학"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"자연과학대학","c":["지구과학"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"간호대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"공과대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"공과대학","c":["물리학"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"공과대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"공과대학","c":["물리학"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"공과대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"공과대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"공과대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"공과대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"공과대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"공과대학","c":["물리학"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"공과대학","c":["물리학"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"공과대학","c":["물리학"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"농업생명과학대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"농업생명과학대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"농업생명과학대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"농업생명과학대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"농업생명과학대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"농업생명과학대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"농업생명과학대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"사범대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"사범대학","c":["물리학"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"사범대학","c":["화학"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"사범대학","c":["생명과학"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"사범대학","c":["지구과학"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"생활과학대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"생활과학대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"수의과대학","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"의과대학","c":["생명과학"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"첨단융합학부","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"치의학대학원","c":[],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울대","d":"약학대학","c":["화학","생명과학"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"서울시립대","d":"행정학과","c":["국어","영어","사회"],"r":[]},{"u":"서울시립대","d":"국제관계학과","c":["국어","영어","사회"],"r":[]},{"u":"서울시립대","d":"경제학부","c":[],"r":["영어","사회"]},{"u":"서울시립대","d":"사회복지학과","c":["국어","영어","사회"],"r":[]},{"u":"서울시립대","d":"세무학과","c":["국어","영어","사회"],"r":[]},{"u":"서울시립대","d":"경영학부","c":["영어"],"r":[]},{"u":"서울시립대","d":"영어영문학과","c":["영어"],"r":["국어","사회"]},{"u":"서울시립대","d":"국어국문학과","c":["국어"],"r":["영어","사회"]},{"u":"서울시립대","d":"국사학과","c":["역사"],"r":["국어","사회"]},{"u":"서울시립대","d":"철학과","c":["국어","영어","사회"],"r":[]},{"u":"서울시립대","d":"중국어문화학과","c":["국어","영어","사회"],"r":[]},{"u":"서울시립대","d":"도시행정학과","c":["국어","영어","사회"],"r":[]},{"u":"서울시립대","d":"전자전기컴퓨터공학부","c":["미적분Ⅰ"],"r":[]},{"u":"서울시립대","d":"화학공학과","c":["화학","미적분Ⅰ"],"r":[]},{"u":"서울시립대","d":"기계정보공학과","c":["미적분Ⅰ"],"r":["기하","확률과통계"]},{"u":"서울시립대","d":"토목공학과","c":["미적분Ⅰ"],"r":[]},{"u":"서울시립대","d":"컴퓨터과학부","c":["미적분Ⅰ"],"r":[]},{"u":"서울시립대","d":"물리학과","c":["미적분Ⅰ","기하"],"r":[]},{"u":"서울시립대","d":"생명과학과","c":["생명과학"],"r":["화학"]},{"u":"서울시립대","d":"환경원예학과","c":["화학","생명과학"],"r":[]},{"u":"서울시립대","d":"융합응용화학과","c":["화학"],"r":["미적분Ⅰ"]},{"u":"서울시립대","d":"건축학부 건축공학전공","c":["미적분Ⅰ","기하","영어"],"r":[]},{"u":"서울시립대","d":"건축학부 건축학전공","c":["화학","지구과학","기하","국어","영어"],"r":[]},{"u":"서울시립대","d":"도시공학과","c":["국어","영어"],"r":[]},{"u":"서울시립대","d":"조경학과","c":["국어","영어","사회"],"r":[]},{"u":"서울시립대","d":"환경공학부","c":[],"r":["화학"]},{"u":"서울시립대","d":"공간정보공학과","c":["물리학","지구과학","미적분Ⅰ"],"r":[]},{"u":"서울시립대","d":"자유전공학부(인문)","c":["국어","영어","사회"],"r":[]},{"u":"서울시립대","d":"자유전공학부(자연)","c":[],"r":["국어","영어"]},{"u":"서울시립대","d":"첨단융합학부 융합바이오헬스전공","c":["화학","생명과학","미적분Ⅰ"],"r":[]},{"u":"서울시립대","d":"첨단융합학부 지능형반도체전공","c":["화학"],"r":[]},{"u":"숭실대","d":"인문대학","c":["국어","영어","사회"],"r":[]},{"u":"숭실대","d":"인문대학","c":["국어","영어","사회"],"r":[]},{"u":"숭실대","d":"인문대학","c":["국어","영어","사회"],"r":[]},{"u":"숭실대","d":"인문대학","c":["국어","영어","사회"],"r":[]},{"u":"숭실대","d":"인문대학","c":["국어","영어","사회"],"r":[]},{"u":"숭실대","d":"인문대학","c":["국어","영어","사회"],"r":[]},{"u":"숭실대","d":"인문대학","c":["국어","영어","사회"],"r":[]},{"u":"숭실대","d":"인문대학","c":["국어","영어","사회"],"r":[]},{"u":"숭실대","d":"인문대학","c":["국어","영어","사회"],"r":[]},{"u":"숭실대","d":"법과대학","c":["국어","영어","사회"],"r":[]},{"u":"숭실대","d":"법과대학","c":["국어","영어","사회"],"r":[]},{"u":"숭실대","d":"사회과학대학","c":["국어","사회"],"r":[]},{"u":"숭실대","d":"사회과학대학","c":["국어","사회"],"r":[]},{"u":"숭실대","d":"사회과학대학","c":["국어","사회"],"r":[]},{"u":"숭실대","d":"사회과학대학","c":["국어","사회"],"r":[]},{"u":"숭실대","d":"사회과학대학","c":["국어","사회"],"r":[]},{"u":"숭실대","d":"사회과학대학","c":["국어","사회"],"r":[]},{"u":"숭실대","d":"경제통상대학","c":["국어","사회"],"r":[]},{"u":"숭실대","d":"경제통상대학","c":["국어","사회"],"r":[]},{"u":"숭실대","d":"경영대학","c":["국어","사회"],"r":[]},{"u":"숭실대","d":"경영대학","c":["국어","사회"],"r":[]},{"u":"숭실대","d":"경영대학","c":["국어","사회"],"r":[]},{"u":"숭실대","d":"경영대학","c":["국어","사회"],"r":[]},{"u":"숭실대","d":"자연과학대학","c":["물리학"],"r":[]},{"u":"숭실대","d":"자연과학대학","c":["화학"],"r":[]},{"u":"숭실대","d":"자연과학대학","c":["생명과학"],"r":[]},{"u":"숭실대","d":"공과대학","c":["화학"],"r":[]},{"u":"숭실대","d":"공과대학","c":["화학"],"r":[]},{"u":"숭실대","d":"공과대학","c":["물리학"],"r":[]},{"u":"숭실대","d":"공과대학","c":["물리학"],"r":[]},{"u":"숭실대","d":"공과대학","c":["물리학"],"r":[]},{"u":"숭실대","d":"IT대학","c":["물리학"],"r":[]},{"u":"숭실대","d":"IT대학","c":["물리학"],"r":[]},{"u":"숭실대","d":"베어드학부대학","c":["국어","영어","사회"],"r":[]},{"u":"중앙대","d":"기계공학부","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"물리학과","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"사회기반시스템공학부 건설환경플랜트공학전공","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"전자전기공학부","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"지능형반도체공학과","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"에너지시스템공학부","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"첨단소재공학과","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"화학공학과","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"융합공학부","c":["물리학","화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"건축학부","c":["물리학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"사회기반시스템공학부 도시시스템공학전공","c":["물리학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"소프트웨어학부","c":["물리학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"AI학부","c":["미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"산업보안학과(자연)","c":["미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"수학과","c":["미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"예술공학부","c":["미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"약학부","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"의학부","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"생명과학과","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ"],"r":[]},{"u":"중앙대","d":"화학과","c":["물리학","화학","생명과학","미적분Ⅱ","미적분Ⅰ"],"r":[]},{"u":"중앙대","d":"시스템생명공학과","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"식품공학과(식품공학전공, 식품영양전공)","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"중앙대","d":"간호학과","c":["생명과학","미적분Ⅱ","미적분Ⅰ"],"r":[]},{"u":"중앙대","d":"생명자원공학부(동물생명공학전공, 식물생명공학전공)","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ"],"r":[]},{"u":"한양대","d":"자연","c":["물리학","화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"인하대","d":"공과대학","c":["물리학"],"r":["화학"]},{"u":"인하대","d":"공과대학","c":["물리학"],"r":["화학"]},{"u":"인하대","d":"공과대학","c":["물리학"],"r":["화학"]},{"u":"인하대","d":"공과대학","c":["물리학"],"r":["화학","지구과학"]},{"u":"인하대","d":"공과대학","c":["물리학"],"r":["화학","지구과학"]},{"u":"인하대","d":"공과대학","c":["물리학"],"r":["화학","지구과학"]},{"u":"인하대","d":"공과대학","c":["물리학"],"r":["화학","지구과학"]},{"u":"인하대","d":"공과대학","c":["화학"],"r":["물리학"]},{"u":"인하대","d":"공과대학","c":["화학"],"r":["물리학"]},{"u":"인하대","d":"공과대학","c":["화학"],"r":["물리학"]},{"u":"인하대","d":"공과대학","c":["화학"],"r":["물리학"]},{"u":"인하대","d":"공과대학","c":["화학"],"r":["생명과학"]},{"u":"인하대","d":"공과대학","c":[],"r":["화학","지구과학"]},{"u":"인하대","d":"소프트웨어융합대학","c":["물리학"],"r":["화학"]},{"u":"인하대","d":"자연과학대학","c":["물리학"],"r":[]},{"u":"인하대","d":"자연과학대학","c":["화학"],"r":[]},{"u":"인하대","d":"자연과학대학","c":[],"r":["화학","생명과학","지구과학"]},{"u":"인하대","d":"자연과학대학","c":["생명과학"],"r":["화학"]},{"u":"인하대","d":"의과대학","c":["생명과학"],"r":["화학"]},{"u":"인하대","d":"간호대학","c":["생명과학"],"r":["화학"]},{"u":"인하대","d":"바이오시스템융합학부","c":["생명과학"],"r":["화학"]},{"u":"인하대","d":"바이오시스템융합학부","c":["생명과학"],"r":["화학"]},{"u":"인하대","d":"바이오시스템융합학부","c":["생명과학"],"r":["화학"]},{"u":"인하대","d":"바이오시스템융합학부","c":["생명과학"],"r":["화학"]},{"u":"경기대","d":"인문/예체능","c":["국어","영어","한국사","사회"],"r":[]},{"u":"경기대","d":"자연/공학(수학과 제외)","c":["국어","영어","한국사","사회"],"r":[]},{"u":"경기대","d":"수학과","c":["국어","영어","한국사"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"단국대","d":"인문계열","c":["국어","영어","사회"],"r":[]},{"u":"단국대","d":"인문계열","c":["국어","영어","사회"],"r":[]},{"u":"단국대","d":"인문계열","c":["국어","영어","사회"],"r":[]},{"u":"단국대","d":"인문계열","c":["국어","영어","사회"],"r":[]},{"u":"단국대","d":"인문계열","c":["국어","영어","사회"],"r":[]},{"u":"단국대","d":"인문계열","c":["국어","영어","사회"],"r":[]},{"u":"단국대","d":"인문계열","c":["국어","영어","사회"],"r":[]},{"u":"단국대","d":"인문계열","c":["국어","영어","사회"],"r":[]},{"u":"단국대","d":"인문계열","c":["국어","영어","사회"],"r":[]},{"u":"단국대","d":"자연계열","c":["국어","영어"],"r":[]},{"u":"단국대","d":"자연계열","c":["국어","영어"],"r":[]},{"u":"단국대","d":"자연계열","c":["국어","영어"],"r":[]},{"u":"단국대","d":"자연계열","c":["국어","영어"],"r":[]},{"u":"단국대","d":"자연계열","c":["국어","영어"],"r":[]},{"u":"단국대","d":"자연계열","c":["국어","영어"],"r":[]},{"u":"단국대","d":"자연계열","c":["국어","영어"],"r":[]},{"u":"성결대","d":"미래인재융합대학","c":["사회"],"r":[]},{"u":"성결대","d":"인문대학","c":["사회"],"r":[]},{"u":"성결대","d":"인문대학","c":["사회"],"r":[]},{"u":"성결대","d":"인문대학","c":["사회"],"r":[]},{"u":"성결대","d":"사회과학대학","c":["사회"],"r":[]},{"u":"성결대","d":"사회과학대학","c":["사회"],"r":[]},{"u":"성결대","d":"사회과학대학","c":["사회"],"r":[]},{"u":"성결대","d":"사회과학대학","c":["사회"],"r":[]},{"u":"성결대","d":"글로벌경영기술대학","c":["사회"],"r":[]},{"u":"성결대","d":"글로벌경영기술대학","c":["사회"],"r":[]},{"u":"아주대","d":"공과대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"공과대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"공과대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"공과대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"공과대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"공과대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"공과대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"공과대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"공과대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"첨단ICT융합대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"첨단ICT융합대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"첨단ICT융합대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"소프트웨어융합대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"소프트웨어융합대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"소프트웨어융합대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"소프트웨어융합대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"자연과학대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"자연과학대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"의과대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"간호대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"약학대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"첨단바이오융합대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"아주대","d":"경영대학","c":["미적분Ⅰ","대수","확률과통계","사회"],"r":[]},{"u":"아주대","d":"경영대학","c":["미적분Ⅰ","대수","확률과통계","사회"],"r":[]},{"u":"아주대","d":"경영대학","c":["미적분Ⅰ","대수","확률과통계","사회"],"r":[]},{"u":"아주대","d":"인문대학","c":["사회"],"r":[]},{"u":"아주대","d":"인문대학","c":["사회"],"r":[]},{"u":"아주대","d":"인문대학","c":["사회"],"r":[]},{"u":"아주대","d":"인문대학","c":["사회"],"r":[]},{"u":"아주대","d":"인문대학","c":["사회"],"r":[]},{"u":"아주대","d":"사회과학대학","c":["미적분Ⅰ","대수","확률과통계","사회"],"r":[]},{"u":"아주대","d":"사회과학대학","c":["미적분Ⅰ","대수","확률과통계","사회"],"r":[]},{"u":"아주대","d":"사회과학대학","c":["미적분Ⅰ","대수","확률과통계","사회"],"r":[]},{"u":"한국항공대","d":"공학","c":["미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"한국항공대","d":"공학","c":["미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"한국항공대","d":"공학","c":["미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"한국항공대","d":"공학","c":["미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"한국항공대","d":"이학","c":["미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"한국항공대","d":"이학","c":["미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"한국항공대","d":"사회","c":["미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"한양대(ERICA)","d":"공학대학","c":[],"r":["미적분Ⅰ","대수"]},{"u":"한양대(ERICA)","d":"공학대학","c":[],"r":["물리학","화학","지구과학","미적분Ⅰ","대수"]},{"u":"한양대(ERICA)","d":"공학대학","c":[],"r":["물리학","화학","미적분Ⅰ"]},{"u":"한양대(ERICA)","d":"공학대학","c":[],"r":["미적분Ⅰ","확률과통계"]},{"u":"한양대(ERICA)","d":"공학대학","c":[],"r":["물리학","미적분Ⅰ","대수"]},{"u":"한양대(ERICA)","d":"공학대학","c":[],"r":["물리학","화학","미적분Ⅰ","대수"]},{"u":"한양대(ERICA)","d":"공학대학","c":[],"r":["물리학","미적분Ⅰ"]},{"u":"한양대(ERICA)","d":"공학대학","c":[],"r":["물리학","미적분Ⅰ","확률과통계"]},{"u":"한양대(ERICA)","d":"공학대학","c":[],"r":["화학","미적분Ⅰ","확률과통계"]},{"u":"한양대(ERICA)","d":"공학대학","c":[],"r":["화학","지구과학","미적분Ⅰ","확률과통계"]},{"u":"한양대(ERICA)","d":"공학대학","c":[],"r":["대수"]},{"u":"한양대(ERICA)","d":"공학대학","c":[],"r":["미적분Ⅰ","확률과통계"]},{"u":"한양대(ERICA)","d":"공학대학 스마트융합공학부","c":[],"r":["물리학","화학","미적분Ⅰ","확률과통계"]},{"u":"한양대(ERICA)","d":"공학대학 스마트융합공학부","c":[],"r":["물리학","미적분Ⅰ","대수"]},{"u":"한양대(ERICA)","d":"공학대학 스마트융합공학부","c":[],"r":["물리학","미적분Ⅰ","대수","확률과통계"]},{"u":"한양대(ERICA)","d":"공학대학 스마트융합공학부","c":[],"r":["물리학","화학","대수","확률과통계"]},{"u":"한양대(ERICA)","d":"공학대학 스마트융합공학부","c":[],"r":["물리학","화학","확률과통계"]},{"u":"한양대(ERICA)","d":"소프트웨어융합대학","c":[],"r":["미적분Ⅰ","확률과통계"]},{"u":"한양대(ERICA)","d":"소프트웨어융합대학","c":[],"r":["물리학","화학","확률과통계"]},{"u":"한양대(ERICA)","d":"소프트웨어융합대학","c":[],"r":["미적분Ⅰ","확률과통계"]},{"u":"한양대(ERICA)","d":"약학대학","c":[],"r":["화학","생명과학"]},{"u":"한양대(ERICA)","d":"첨단융합대학 차세대반도체융합공학부","c":[],"r":["물리학","화학","미적분Ⅰ","확률과통계"]},{"u":"한양대(ERICA)","d":"첨단융합대학 차세대반도체융합공학부","c":[],"r":["물리학","화학","미적분Ⅰ","확률과통계"]},{"u":"한양대(ERICA)","d":"첨단융합대학 차세대반도체융합공학부","c":[],"r":["물리학","화학","미적분Ⅰ"]},{"u":"한양대(ERICA)","d":"첨단융합대학 바이오신약융합학부","c":[],"r":["화학","생명과학"]},{"u":"한양대(ERICA)","d":"첨단융합대학 바이오신약융합학부","c":[],"r":["생명과학"]},{"u":"한양대(ERICA)","d":"첨단융합대학 바이오신약융합학부","c":[],"r":["화학","생명과학","미적분Ⅰ","확률과통계"]},{"u":"한양대(ERICA)","d":"첨단융합대학 국방지능정보융합공학부","c":[],"r":["물리학","지구과학","미적분Ⅰ","확률과통계"]},{"u":"한양대(ERICA)","d":"첨단융합대학 국방지능정보융합공학부","c":[],"r":["물리학","지구과학"]},{"u":"협성대","d":"웨슬리대학","c":["사회"],"r":[]},{"u":"협성대","d":"인문사회과학대학","c":["사회"],"r":[]},{"u":"협성대","d":"인문사회과학대학","c":["사회"],"r":[]},{"u":"협성대","d":"인문사회과학대학","c":["사회"],"r":[]},{"u":"협성대","d":"인문사회과학대학","c":["사회"],"r":[]},{"u":"협성대","d":"인문사회과학대학","c":["사회"],"r":[]},{"u":"협성대","d":"경영대학","c":["사회"],"r":[]},{"u":"협성대","d":"경영대학","c":["사회"],"r":[]},{"u":"협성대","d":"경영대학","c":["사회"],"r":[]},{"u":"협성대","d":"경영대학","c":["사회"],"r":[]},{"u":"협성대","d":"경영대학","c":["사회"],"r":[]},{"u":"협성대","d":"경영대학","c":["사회"],"r":[]},{"u":"협성대","d":"경영대학","c":["사회"],"r":[]},{"u":"경성대학교","d":"자연","c":["화학","생명과학"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"동아대","d":"인문과학대학","c":["국어","사회"],"r":[]},{"u":"동아대","d":"인문과학대학","c":["국어","사회"],"r":[]},{"u":"동아대","d":"인문과학대학","c":["국어","영어","사회"],"r":[]},{"u":"동아대","d":"인문과학대학","c":["국어","영어","사회"],"r":[]},{"u":"동아대","d":"인문과학대학","c":["국어","영어","사회"],"r":[]},{"u":"동아대","d":"자연과학대학","c":["영어"],"r":[]},{"u":"동아대","d":"자연과학대학","c":["영어"],"r":[]},{"u":"동아대","d":"사회과학대학","c":["국어","영어","사회"],"r":[]},{"u":"동아대","d":"사회과학대학","c":["국어","사회"],"r":[]},{"u":"동아대","d":"사회과학대학","c":["국어","영어","사회"],"r":[]},{"u":"동아대","d":"사회과학대학","c":["국어","영어","사회"],"r":[]},{"u":"동아대","d":"사회과학대학","c":["국어","영어","사회"],"r":[]},{"u":"동아대","d":"사회과학대학","c":["국어","영어","사회"],"r":[]},{"u":"동아대","d":"사회과학대학","c":["영어"],"r":[]},{"u":"동아대","d":"경영대학","c":["영어"],"r":[]},{"u":"동아대","d":"경영대학","c":["영어"],"r":[]},{"u":"동아대","d":"경영대학","c":["영어","사회"],"r":[]},{"u":"동아대","d":"경영대학","c":["국어","영어"],"r":[]},{"u":"동아대","d":"경영대학","c":["국어","영어"],"r":[]},{"u":"동아대","d":"경영대학","c":["국어","영어"],"r":[]},{"u":"동아대","d":"생명자원과학대학","c":["영어"],"r":[]},{"u":"동아대","d":"생명자원과학대학","c":["영어"],"r":[]},{"u":"동아대","d":"생명자원과학대학","c":["영어"],"r":[]},{"u":"동아대","d":"생명자원과학대학","c":["영어"],"r":[]},{"u":"동아대","d":"공과대학","c":["영어"],"r":[]},{"u":"동아대","d":"공과대학","c":["영어"],"r":[]},{"u":"동아대","d":"공과대학","c":["영어"],"r":[]},{"u":"동아대","d":"공과대학","c":["영어"],"r":[]},{"u":"동아대","d":"공과대학","c":["영어"],"r":[]},{"u":"동아대","d":"공과대학","c":["영어"],"r":[]},{"u":"동아대","d":"공과대학","c":["영어"],"r":[]},{"u":"동아대","d":"공과대학","c":["국어","영어"],"r":[]},{"u":"동아대","d":"디자인환경대학","c":["국어","영어"],"r":[]},{"u":"동아대","d":"디자인환경대학","c":["국어","영어","사회"],"r":[]},{"u":"동아대","d":"디자인환경대학","c":["영어"],"r":[]},{"u":"동아대","d":"예술체육대학","c":["국어","영어"],"r":[]},{"u":"동아대","d":"예술체육대학","c":["국어","영어"],"r":[]},{"u":"동아대","d":"예술체육대학","c":["국어","영어"],"r":[]},{"u":"동아대","d":"예술체육대학","c":["국어","영어","사회"],"r":[]},{"u":"동아대","d":"건강과학대학","c":["영어"],"r":[]},{"u":"동아대","d":"건강과학대학","c":["영어"],"r":[]},{"u":"동아대","d":"건강과학대학","c":["영어"],"r":[]},{"u":"동아대","d":"건강과학대학","c":["국어","영어"],"r":[]},{"u":"동아대","d":"의과대학","c":["국어","영어"],"r":[]},{"u":"동아대","d":"국제대학","c":["영어","사회"],"r":[]},{"u":"동아대","d":"국제대학","c":["국어","영어","사회"],"r":[]},{"u":"동아대","d":"국제대학","c":["국어","영어","사회"],"r":[]},{"u":"동아대","d":"국제대학","c":["국어","영어","사회"],"r":[]},{"u":"동아대","d":"소프트웨어대학","c":["영어"],"r":[]},{"u":"동아대","d":"소프트웨어대학","c":["영어"],"r":[]},{"u":"동아대","d":"간호대학","c":["국어","영어"],"r":[]},{"u":"동아대","d":"석당인재학부","c":["국어","영어","사회"],"r":[]},{"u":"동아대","d":"융합대학","c":["국어","영어","사회"],"r":[]},{"u":"부산대","d":"경제통상대학","c":["미적분Ⅱ","미적분Ⅰ","확률과통계"],"r":[]},{"u":"부산대","d":"경영대학","c":["미적분Ⅱ","미적분Ⅰ","확률과통계"],"r":[]},{"u":"부산대","d":"자연과학대학","c":["미적분Ⅱ","미적분Ⅰ","기하","확률과통계"],"r":[]},{"u":"부산대","d":"자연과학대학","c":["미적분Ⅱ","미적분Ⅰ","기하","확률과통계"],"r":[]},{"u":"부산대","d":"자연과학대학","c":["화학","생명과학"],"r":[]},{"u":"부산대","d":"자연과학대학","c":["화학","생명과학"],"r":[]},{"u":"부산대","d":"자연과학대학","c":["화학","생명과학"],"r":[]},{"u":"부산대","d":"자연과학대학","c":["화학","생명과학"],"r":[]},{"u":"부산대","d":"자연과학대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"자연과학대학","c":["물리학","지구과학"],"r":[]},{"u":"부산대","d":"자연과학대학","c":["물리학","지구과학"],"r":[]},{"u":"부산대","d":"자연과학대학","c":["물리학","지구과학"],"r":[]},{"u":"부산대","d":"공과대학","c":["미적분Ⅱ","미적분Ⅰ","기하","확률과통계"],"r":[]},{"u":"부산대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"공과대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"공과대학","c":["미적분Ⅱ","미적분Ⅰ","기하","확률과통계"],"r":[]},{"u":"부산대","d":"공과대학","c":["미적분Ⅱ","미적분Ⅰ","기하","확률과통계"],"r":[]},{"u":"부산대","d":"공과대학","c":["미적분Ⅱ","미적분Ⅰ","기하","확률과통계"],"r":[]},{"u":"부산대","d":"공과대학","c":["미적분Ⅱ","미적분Ⅰ","기하","확률과통계"],"r":[]},{"u":"부산대","d":"공과대학","c":["미적분Ⅱ","미적분Ⅰ","기하","확률과통계"],"r":[]},{"u":"부산대","d":"사범대학","c":["화학","생명과학"],"r":[]},{"u":"부산대","d":"사범대학","c":["미적분Ⅱ","미적분Ⅰ","기하","확률과통계"],"r":[]},{"u":"부산대","d":"사범대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"사범대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"사범대학","c":["물리학","지구과학"],"r":[]},{"u":"부산대","d":"생활과학대학","c":["화학","생명과학"],"r":[]},{"u":"부산대","d":"생명자원과학대학","c":["화학","생명과학"],"r":[]},{"u":"부산대","d":"생명자원과학대학","c":["화학","생명과학"],"r":[]},{"u":"부산대","d":"생명자원과학대학","c":["화학","생명과학"],"r":[]},{"u":"부산대","d":"생명자원과학대학","c":["화학","생명과학"],"r":[]},{"u":"부산대","d":"생명자원과학대학","c":["화학","생명과학"],"r":[]},{"u":"부산대","d":"생명자원과학대학","c":["화학","생명과학"],"r":[]},{"u":"부산대","d":"생명자원과학대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"부산대","d":"간호대학","c":["화학","생명과학"],"r":[]},{"u":"부산대","d":"약학부","c":["화학","생명과학"],"r":[]},{"u":"부산대","d":"의과대학","c":["화학","생명과학"],"r":[]},{"u":"부산대","d":"치과대학","c":["화학","생명과학"],"r":[]},{"u":"부산대","d":"한의학전문대학원","c":["화학","생명과학"],"r":[]},{"u":"부산대","d":"정보의생명공학대학","c":["물리학","화학","생명과학"],"r":[]},{"u":"부산대","d":"학부대학","c":["물리학","화학","생명과학"],"r":[]},{"u":"부산대","d":"학부대학","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하"],"r":[]},{"u":"경북대","d":"인문대학","c":["국어"],"r":[]},{"u":"경북대","d":"인문대학","c":["국어"],"r":[]},{"u":"경북대","d":"인문대학","c":["국어"],"r":[]},{"u":"경북대","d":"인문대학","c":["사회"],"r":["역사"]},{"u":"경북대","d":"인문대학","c":["사회"],"r":["역사"]},{"u":"경북대","d":"사회과학대학","c":["사회","지리","윤리"],"r":["지리","윤리"]},{"u":"경북대","d":"자연과학대학","c":["물리학","미적분Ⅰ","대수","확률과통계"],"r":["미적분Ⅱ","미적분Ⅰ","기하","인공지능수학"]},{"u":"경북대","d":"자연과학대학","c":["물리학","미적분Ⅰ","대수","확률과통계"],"r":["미적분Ⅱ","미적분Ⅰ","기하","인공지능수학"]},{"u":"경북대","d":"자연과학대학","c":["물리학","미적분Ⅰ","대수","확률과통계"],"r":["미적분Ⅱ","미적분Ⅰ","기하","인공지능수학"]},{"u":"경북대","d":"자연과학대학","c":["화학","생명과학","미적분Ⅰ"],"r":["화학"]},{"u":"경북대","d":"자연과학대학","c":["화학","생명과학","미적분Ⅰ"],"r":["화학"]},{"u":"경북대","d":"공과대학","c":["물리학","화학","미적분Ⅰ","대수","확률과통계"],"r":["화학","미적분Ⅱ","미적분Ⅰ","기하","인공지능수학"]},{"u":"경북대","d":"IT대학","c":["물리학","화학","미적분Ⅰ","대수","확률과통계"],"r":["미적분Ⅱ","미적분Ⅰ","기하"]},{"u":"경북대","d":"농업생명과학대학","c":["물리학","화학","생명과학","미적분Ⅰ","대수","확률과통계"],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"경북대","d":"농업생명과학대학","c":["미적분Ⅰ","확률과통계"],"r":["미적분Ⅱ","미적분Ⅰ"]},{"u":"경북대","d":"사범대학","c":["국어"],"r":[]},{"u":"경북대","d":"의과대학","c":["물리학","화학","생명과학","미적분Ⅰ","대수","확률과통계"],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"경북대","d":"치과대학","c":["물리학","화학","생명과학","미적분Ⅰ","대수","확률과통계"],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"경북대","d":"수의과대학","c":["물리학","화학","생명과학","미적분Ⅰ","대수","확률과통계"],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"경북대","d":"약학대학","c":["물리학","화학","생명과학","미적분Ⅰ","대수","확률과통계"],"r":["화학","미적분Ⅱ","미적분Ⅰ"]},{"u":"경북대","d":"생활과학대학","c":["화학","생명과학"],"r":["화학"]},{"u":"경북대","d":"간호대학","c":["화학","생명과학"],"r":["화학"]},{"u":"경북대","d":"생태환경대학","c":["화학","생명과학"],"r":[]},{"u":"경북대","d":"과학기술대학","c":["물리학","화학","미적분Ⅰ","대수","확률과통계"],"r":["화학","미적분Ⅱ","미적분Ⅰ","기하","인공지능수학"]},{"u":"경북대","d":"과학기술대학","c":["화학","생명과학"],"r":[]},{"u":"경북대","d":"과학기술대학","c":["화학","생명과학"],"r":[]},{"u":"영남대","d":"언어·문학","c":["확률과통계","국어","영어","사회","역사","지리","윤리","인공지능수학"],"r":[]},{"u":"영남대","d":"언어·문학","c":["확률과통계","국어","영어","사회","역사","지리","윤리","인공지능수학"],"r":[]},{"u":"영남대","d":"언어·문학","c":["확률과통계","국어","영어","사회","역사","지리","윤리","인공지능수학"],"r":[]},{"u":"영남대","d":"언어·문학","c":["확률과통계","국어","영어","사회","역사","지리","윤리","인공지능수학"],"r":[]},{"u":"영남대","d":"언어·문학","c":["확률과통계","국어","영어","사회","역사","지리","윤리","인공지능수학"],"r":[]},{"u":"영남대","d":"언어·문학","c":["확률과통계","국어","영어","사회","역사","지리","윤리","인공지능수학"],"r":[]},{"u":"영남대","d":"언어·문학","c":["확률과통계","국어","영어","사회","역사","지리","윤리","인공지능수학"],"r":[]},{"u":"영남대","d":"언어·문학","c":["확률과통계","국어","영어","사회","역사","지리","윤리","인공지능수학"],"r":[]},{"u":"영남대","d":"인문학","c":["영어","사회","역사","지리","윤리","인공지능수학"],"r":[]},{"u":"영남대","d":"인문학","c":["영어","사회","역사","지리","윤리","인공지능수학"],"r":[]},{"u":"영남대","d":"인문학","c":["영어","사회","역사","지리","윤리","인공지능수학"],"r":[]},{"u":"영남대","d":"사회과학","c":["영어","사회","역사","지리","윤리","인공지능수학"],"r":[]},{"u":"영남대","d":"사회과학","c":["영어","사회","역사","지리","윤리","인공지능수학"],"r":[]},{"u":"영남대","d":"사회과학","c":["영어","사회","역사","지리","윤리","인공지능수학"],"r":[]},{"u":"영남대","d":"사회과학","c":["생명과학","미적분Ⅰ","대수","확률과통계","영어","사회","역사","지리","윤리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"사회과학","c":["생명과학","미적분Ⅰ","대수","확률과통계","영어","사회","역사","지리","윤리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"사회과학","c":["생명과학","미적분Ⅰ","대수","확률과통계","영어","사회","역사","지리","윤리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"사회과학","c":["생명과학","미적분Ⅰ","대수","확률과통계","영어","사회","역사","지리","윤리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"사회과학","c":["생명과학","미적분Ⅰ","대수","확률과통계","영어","사회","역사","지리","윤리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"사회과학","c":["생명과학","미적분Ⅰ","대수","확률과통계","영어","사회","역사","지리","윤리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"경영·경제","c":["생명과학","미적분Ⅰ","대수","확률과통계","국어","영어","사회","지리","윤리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"경영·경제","c":["생명과학","미적분Ⅰ","대수","확률과통계","국어","영어","사회","지리","윤리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"경영·경제","c":["생명과학","미적분Ⅰ","대수","확률과통계","국어","영어","사회","지리","윤리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"경영·경제","c":["생명과학","미적분Ⅰ","대수","확률과통계","국어","영어","사회","지리","윤리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"경영·경제","c":["생명과학","미적분Ⅰ","대수","확률과통계","국어","영어","사회","지리","윤리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"경영·경제","c":["생명과학","미적분Ⅰ","대수","확률과통계","국어","영어","사회","지리","윤리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"교육","c":["국어","영어","사회","역사","지리","윤리","인공지능수학"],"r":[]},{"u":"영남대","d":"교육","c":["국어","영어","사회","역사","지리","윤리","인공지능수학"],"r":[]},{"u":"영남대","d":"교육","c":["국어","영어","사회","역사","지리","윤리","인공지능수학"],"r":[]},{"u":"영남대","d":"교육","c":["국어","영어","사회","역사","지리","윤리","인공지능수학"],"r":[]},{"u":"영남대","d":"교육","c":["국어","영어","사회","역사","지리","윤리","인공지능수학"],"r":[]},{"u":"영남대","d":"수학·물리·천문·지구","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"수학·물리·천문·지구","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"수학·물리·천문·지구","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"화학·생명과학·환경","c":["물리학","화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"화학·생명과학·환경","c":["물리학","화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"화학·생명과학·환경","c":["물리학","화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"화학·생명과학·환경","c":["물리학","화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"농림·수산","c":["물리학","화학","생명과학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계","영어","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"농림·수산","c":["물리학","화학","생명과학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계","영어","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"농림·수산","c":["물리학","화학","생명과학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계","영어","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"생활과학","c":["화학","생명과학","확률과통계","영어","사회","윤리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"생활과학","c":["화학","생명과학","영어","사회","윤리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"생활과학","c":["화학","생명과학","영어","사회","윤리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"교육","c":["물리학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","인공지능수학"],"r":[]},{"u":"영남대","d":"의약학","c":["물리학","화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","사회","윤리"],"r":[]},{"u":"영남대","d":"의약학","c":["물리학","화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","사회","윤리"],"r":[]},{"u":"영남대","d":"N.C.E","c":["대수","영어","사회"],"r":[]},{"u":"영남대","d":"건설","c":["물리학","화학","생명과학","지구과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","사회","역사","지리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"건설","c":["물리학","화학","생명과학","지구과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","사회","역사","지리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"건설","c":["물리학","화학","생명과학","지구과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","사회","역사","지리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"건설","c":["물리학","화학","생명과학","지구과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","사회","역사","지리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"건설","c":["물리학","화학","생명과학","지구과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","사회","역사","지리","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"기계","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"기계","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"기계","c":["물리학","화학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"전기·전자·컴퓨터","c":["물리학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"전기·전자·컴퓨터","c":["물리학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"전기·전자·컴퓨터","c":["물리학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"전기·전자·컴퓨터","c":["물리학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"전기·전자·컴퓨터","c":["물리학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"재료","c":["물리학","화학","생명과학","지구과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"재료","c":["물리학","화학","생명과학","지구과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","정보","인공지능수학"],"r":[]},{"u":"영남대","d":"화공·고분자·에너지","c":["물리학","화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","인공지능수학"],"r":[]},{"u":"영남대","d":"화공·고분자·에너지","c":["물리학","화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","영어","인공지능수학"],"r":[]},{"u":"POSTECH","d":"반도체공학과","c":["국어","영어"],"r":[]},{"u":"국립한밭대","d":"건설환경디자인대학","c":["국어","영어"],"r":[]},{"u":"국립한밭대","d":"건설환경디자인대학","c":["국어","영어"],"r":[]},{"u":"국립한밭대","d":"인문사회대학","c":["영어","사회","역사"],"r":[]},{"u":"국립한밭대","d":"인문사회대학","c":["영어","사회","역사"],"r":[]},{"u":"국립한밭대","d":"인문사회대학","c":["영어","사회","역사"],"r":[]},{"u":"국립한밭대","d":"인문사회대학","c":["영어","사회","역사"],"r":[]},{"u":"국립한밭대","d":"경상대학","c":["사회","역사"],"r":[]},{"u":"국립한밭대","d":"경상대학","c":["영어","사회","역사"],"r":[]},{"u":"국립한밭대","d":"경상대학","c":["사회","역사"],"r":[]},{"u":"대전가톨릭대","d":"신학과","c":["국어","영어","한국사","사회"],"r":[]},{"u":"충남대","d":"인문대학","c":["국어","영어"],"r":[]},{"u":"충남대","d":"사범대학(국어교육과, 영어교육과, 교육학과)","c":["국어","영어"],"r":[]},{"u":"충남대","d":"국가안보융합학부","c":["국어","영어","사회"],"r":[]},{"u":"충남대","d":"사회과학대학(사회학과, 심리학과, 사회복지학과, 행정학부 제외)","c":["국어","영어","사회"],"r":[]},{"u":"충남대","d":"사회과학대학","c":["확률과통계","국어","영어","사회"],"r":[]},{"u":"충남대","d":"사회과학대학","c":["확률과통계","국어","영어","사회"],"r":[]},{"u":"충남대","d":"사회과학대학","c":["확률과통계","국어","영어","사회"],"r":[]},{"u":"충남대","d":"사회과학대학","c":["확률과통계","국어","영어","사회"],"r":[]},{"u":"충남대","d":"자연과학대학","c":["미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"충남대","d":"자연과학대학","c":["미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"충남대","d":"자연과학대학","c":["미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"충남대","d":"자연과학대학","c":["미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"충남대","d":"자연과학대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"충남대","d":"경상대학","c":["확률과통계","영어"],"r":[]},{"u":"충남대","d":"공과대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"충남대","d":"의과대학","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"충남대","d":"약학대학","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"충남대","d":"수의과대학","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"충남대","d":"생활과학대학","c":["영어"],"r":[]},{"u":"충남대","d":"생활과학대학","c":["영어"],"r":[]},{"u":"충남대","d":"생활과학대학","c":["미적분Ⅰ","대수","확률과통계","영어"],"r":[]},{"u":"충남대","d":"사범대학","c":["미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"충남대","d":"사범대학","c":["미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"충남대","d":"사범대학","c":["미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"충남대","d":"사범대학","c":["미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"충남대","d":"사범대학","c":["미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"충남대","d":"사범대학","c":["미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"충남대","d":"간호대학","c":["생명과학","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"충남대","d":"생명시스템과학대학","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"충남대","d":"지식융합학부","c":["확률과통계","영어"],"r":[]},{"u":"충남대","d":"국제학부","c":["영어"],"r":[]},{"u":"충남대","d":"인문사회융합학부","c":["확률과통계","국어","영어","사회","역사"],"r":[]},{"u":"충남대","d":"자연과학융합학부","c":["미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"충남대","d":"공학융합학부","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"충남대","d":"영농창업인재전형 농업생명과학대학","c":["확률과통계","영어","사회","역사"],"r":[]},{"u":"충남대","d":"영농창업인재전형 농업생명과학대학","c":["미적분Ⅰ","대수","확률과통계","영어"],"r":[]},{"u":"충남대","d":"영농창업인재전형 농업생명과학대학","c":["미적분Ⅰ","대수","확률과통계","영어"],"r":[]},{"u":"충남대","d":"농업생명과학대학(농업경제학과 진로희망자 제외)","c":["미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"충남대","d":"농업생명과학대학","c":["확률과통계","영어","사회","역사"],"r":[]},{"u":"강원대 (춘천)","d":"간호대학","c":["생명과학"],"r":["영어"]},{"u":"강원대 (춘천)","d":"경영대학","c":["미적분Ⅰ","확률과통계","영어"],"r":["국어","영어"]},{"u":"강원대 (춘천)","d":"경영대학","c":["미적분Ⅰ","확률과통계","사회"],"r":["국어","영어","사회"]},{"u":"강원대 (춘천)","d":"경영대학","c":["확률과통계","사회","지리"],"r":["국어","영어","사회"]},{"u":"강원대 (춘천)","d":"경영대학","c":["영어","사회"],"r":["국어","영어","사회"]},{"u":"강원대 (춘천)","d":"농업생명과학대학","c":["화학","생명과학"],"r":[]},{"u":"강원대 (춘천)","d":"농업생명과학대학","c":["물리학","미적분Ⅰ","영어"],"r":["영어"]},{"u":"강원대 (춘천)","d":"농업생명과학대학","c":["물리학","화학","생명과학","미적분Ⅰ","확률과통계"],"r":[]},{"u":"강원대 (춘천)","d":"농업생명과학대학","c":["화학","생명과학"],"r":[]},{"u":"강원대 (춘천)","d":"농업생명과학대학","c":["확률과통계","사회"],"r":["국어","사회"]},{"u":"강원대 (춘천)","d":"농업생명과학대학","c":["물리학","미적분Ⅰ","영어"],"r":["영어"]},{"u":"강원대 (춘천)","d":"농업생명과학대학","c":["물리학","화학","생명과학","지구과학"],"r":[]},{"u":"강원대 (춘천)","d":"동물생명과학대학","c":["화학","생명과학","확률과통계","영어"],"r":["영어"]},{"u":"강원대 (춘천)","d":"동물생명과학대학","c":["화학","생명과학","영어"],"r":["영어"]},{"u":"강원대 (춘천)","d":"동물생명과학대학","c":["화학","생명과학","확률과통계"],"r":["영어"]},{"u":"강원대 (춘천)","d":"문화예술·공과대학","c":["물리학","미적분Ⅰ","기하","정보","인공지능수학"],"r":["정보"]},{"u":"강원대 (춘천)","d":"문화예술·공과대학","c":["물리학","미적분Ⅰ","영어"],"r":["영어"]},{"u":"강원대 (춘천)","d":"문화예술·공과대학","c":["물리학","화학"],"r":["영어"]},{"u":"강원대 (춘천)","d":"문화예술·공과대학","c":["물리학","화학","미적분Ⅰ"],"r":["영어"]},{"u":"강원대 (춘천)","d":"문화예술·공과대학","c":["미적분Ⅰ","확률과통계"],"r":["영어"]},{"u":"강원대 (춘천)","d":"문화예술·공과대학","c":["물리학","화학","지구과학","미적분Ⅰ","영어"],"r":["영어"]},{"u":"강원대 (춘천)","d":"문화예술·공과대학","c":["물리학","미적분Ⅰ","영어"],"r":["영어"]},{"u":"강원대 (춘천)","d":"문화예술·공과대학","c":["물리학","화학","생명과학","미적분Ⅰ","확률과통계"],"r":["영어"]},{"u":"강원대 (춘천)","d":"문화예술·공과대학","c":["물리학","화학","미적분Ⅰ","확률과통계"],"r":["영어"]},{"u":"강원대 (춘천)","d":"문화예술·공과대학","c":["사회"],"r":["국어","영어","사회"]},{"u":"강원대 (춘천)","d":"사범대학","c":["사회"],"r":["국어","영어","사회"]},{"u":"강원대 (춘천)","d":"사범대학","c":["한국사"],"r":["국어","사회"]},{"u":"강원대 (춘천)","d":"사범대학","c":["한국사","역사","지리"],"r":["사회"]},{"u":"강원대 (춘천)","d":"사범대학","c":["영어"],"r":["국어","영어"]},{"u":"강원대 (춘천)","d":"사범대학","c":["영어","사회","윤리"],"r":["국어","영어","사회"]},{"u":"강원대 (춘천)","d":"사범대학","c":["사회"],"r":["국어","영어","사회"]},{"u":"강원대 (춘천)","d":"사범대학","c":["지리"],"r":["국어","영어","사회"]},{"u":"강원대 (춘천)","d":"사범대학","c":["한국사"],"r":["국어","사회"]},{"u":"강원대 (춘천)","d":"사범대학","c":[],"r":["국어","사회"]},{"u":"강원대 (춘천)","d":"사범대학","c":["물리학","화학","생명과학","지구과학"],"r":[]},{"u":"강원대 (춘천)","d":"사범대학","c":["생명과학","미적분Ⅰ","기하","확률과통계","영어"],"r":["영어"]},{"u":"강원대 (춘천)","d":"사범대학","c":[],"r":["국어"]},{"u":"강원대 (춘천)","d":"사회과학대학","c":["지리"],"r":["국어","영어","사회"]},{"u":"강원대 (춘천)","d":"사회과학대학","c":["영어","사회"],"r":["국어","영어","사회"]},{"u":"강원대 (춘천)","d":"사회과학대학","c":["영어","사회"],"r":["국어","영어","사회"]},{"u":"강원대 (춘천)","d":"사회과학대학","c":["확률과통계","사회"],"r":["국어","사회"]},{"u":"강원대 (춘천)","d":"사회과학대학","c":["확률과통계","영어","사회"],"r":["국어","영어","사회"]},{"u":"강원대 (춘천)","d":"사회과학대학","c":["확률과통계","사회"],"r":["국어","사회"]},{"u":"강원대 (춘천)","d":"사회과학대학","c":["사회","윤리"],"r":["국어","영어","사회"]},{"u":"강원대 (춘천)","d":"산림환경과학대학","c":["생명과학","영어"],"r":["국어","영어"]},{"u":"강원대 (춘천)","d":"산림환경과학대학","c":["물리학","화학","생명과학","확률과통계"],"r":["영어"]},{"u":"강원대 (춘천)","d":"산림환경과학대학","c":["생명과학","지구과학","영어"],"r":["국어","영어"]},{"u":"강원대 (춘천)","d":"산림환경과학대학","c":["생명과학","영어"],"r":["국어","영어"]},{"u":"강원대 (춘천)","d":"산림환경과학대학","c":["생명과학","지구과학","지리"],"r":["국어","영어","사회"]},{"u":"강원대 (춘천)","d":"산림환경과학대학","c":["물리학","화학","생명과학","확률과통계"],"r":["영어"]},{"u":"강원대 (춘천)","d":"수의과대학","c":["화학","생명과학","미적분Ⅰ","확률과통계","영어"],"r":["영어"]},{"u":"강원대 (춘천)","d":"약학대학","c":["화학","생명과학","미적분Ⅰ","확률과통계"],"r":[]},{"u":"강원대 (춘천)","d":"의과대학","c":["화학","생명과학","미적분Ⅰ","확률과통계"],"r":["국어","영어"]},{"u":"강원대 (춘천)","d":"의생명과학대학","c":["화학","생명과학"],"r":["영어"]},{"u":"강원대 (춘천)","d":"의생명과학대학","c":["화학","생명과학","영어"],"r":["영어"]},{"u":"강원대 (춘천)","d":"의생명과학대학","c":["화학","생명과학"],"r":["영어"]},{"u":"강원대 (춘천)","d":"의생명과학대학","c":["화학","생명과학","미적분Ⅰ"],"r":[]},{"u":"강원대 (춘천)","d":"의생명과학대학","c":["화학","생명과학"],"r":[]},{"u":"강원대 (춘천)","d":"인문대학","c":["역사"],"r":["국어","사회"]},{"u":"강원대 (춘천)","d":"인문대학","c":["사회"],"r":["국어","영어"]},{"u":"강원대 (춘천)","d":"인문대학","c":["지리"],"r":["국어","영어"]},{"u":"강원대 (춘천)","d":"인문대학","c":["영어","역사"],"r":["국어","영어","사회"]},{"u":"강원대 (춘천)","d":"인문대학","c":["영어"],"r":["영어"]},{"u":"강원대 (춘천)","d":"인문대학","c":["영어","사회"],"r":["국어","영어","사회"]},{"u":"강원대 (춘천)","d":"인문대학","c":["국어","사회"],"r":["국어","사회"]},{"u":"강원대 (춘천)","d":"인문대학","c":["사회","윤리"],"r":["국어","영어","사회"]},{"u":"강원대 (춘천)","d":"자연과학대학","c":["물리학","미적분Ⅰ","기하","확률과통계"],"r":[]},{"u":"강원대 (춘천)","d":"자연과학대학","c":["화학","생명과학"],"r":[]},{"u":"강원대 (춘천)","d":"자연과학대학","c":["미적분Ⅰ","확률과통계","영어"],"r":["영어"]},{"u":"강원대 (춘천)","d":"자연과학대학","c":["물리학","화학","생명과학","지구과학"],"r":["영어"]},{"u":"강원대 (춘천)","d":"자연과학대학","c":["화학","생명과학","미적분Ⅰ","확률과통계"],"r":[]},{"u":"강원대 (춘천)","d":"IT대학","c":["화학","생명과학","미적분Ⅰ","확률과통계"],"r":["영어"]},{"u":"강원대 (춘천)","d":"IT대학","c":["물리학","미적분Ⅰ","확률과통계","영어"],"r":["영어"]},{"u":"강원대 (춘천)","d":"IT대학","c":["미적분Ⅰ","확률과통계"],"r":["영어"]},{"u":"강원대 (춘천)","d":"IT대학","c":["확률과통계","영어"],"r":["영어"]},{"u":"강원대 (춘천)","d":"IT대학","c":["확률과통계","영어","인공지능수학"],"r":["영어"]},{"u":"강원대 (춘천)","d":"독립학부","c":["영어","사회"],"r":["국어","영어","사회"]},{"u":"강원대 (춘천)","d":"독립학부","c":["물리학","화학","생명과학","지구과학","미적분Ⅰ","확률과통계"],"r":["국어","영어"]},{"u":"강원대 (삼척·도계)","d":"공학대학","c":["물리학","화학","미적분Ⅰ"],"r":["영어"]},{"u":"강원대 (삼척·도계)","d":"공학대학","c":["물리학","화학","미적분Ⅰ","영어"],"r":["영어"]},{"u":"강원대 (삼척·도계)","d":"공학대학","c":["물리학","사회"],"r":["국어","사회"]},{"u":"강원대 (삼척·도계)","d":"공학대학","c":["물리학","미적분Ⅰ"],"r":[]},{"u":"강원대 (삼척·도계)","d":"공학대학","c":["물리학","화학","미적분Ⅰ","확률과통계","사회"],"r":["사회"]},{"u":"강원대 (삼척·도계)","d":"공학대학","c":["물리학","화학","미적분Ⅰ","영어"],"r":["영어"]},{"u":"강원대 (삼척·도계)","d":"공학대학","c":["물리학","미적분Ⅰ","확률과통계"],"r":["국어","영어"]},{"u":"강원대 (삼척·도계)","d":"인문사회대학","c":["미적분Ⅰ","확률과통계","사회"],"r":["영어","사회"]},{"u":"강원대 (삼척·도계)","d":"인문사회대학","c":["사회"],"r":["국어","영어","사회"]},{"u":"강원대 (삼척·도계)","d":"인문사회대학","c":["사회","지리"],"r":["국어","영어","사회"]},{"u":"강원대 (삼척·도계)","d":"인문사회대학","c":["영어"],"r":["국어","영어"]},{"u":"강원대 (삼척·도계)","d":"인문사회대학","c":["사회","윤리"],"r":["국어","사회"]},{"u":"강원대 (삼척·도계)","d":"인문사회대학","c":["사회"],"r":["국어","사회"]},{"u":"강원대 (삼척·도계)","d":"인문사회대학","c":["역사"],"r":["국어","사회"]},{"u":"강원대 (삼척·도계)","d":"디자인스포츠대학","c":["영어"],"r":["국어","영어"]},{"u":"강원대 (삼척·도계)","d":"디자인스포츠대학","c":["영어"],"r":["영어"]},{"u":"강원대 (삼척·도계)","d":"디자인스포츠대학","c":[],"r":["국어","영어"]},{"u":"강원대 (삼척·도계)","d":"보건과학대학","c":["화학","생명과학"],"r":[]},{"u":"강원대 (삼척·도계)","d":"보건과학대학","c":["생명과학","확률과통계","영어"],"r":["영어"]},{"u":"강원대 (삼척·도계)","d":"보건과학대학","c":["화학","생명과학"],"r":[]},{"u":"강원대 (삼척·도계)","d":"보건과학대학","c":["물리학","생명과학","확률과통계","영어","윤리"],"r":["영어","사회"]},{"u":"강원대 (삼척·도계)","d":"보건과학대학","c":["화학","영어"],"r":["영어"]},{"u":"강원대 (삼척·도계)","d":"보건과학대학","c":["생명과학","기하"],"r":[]},{"u":"강원대 (삼척·도계)","d":"보건과학대학","c":["생명과학","영어","윤리"],"r":["영어","사회"]},{"u":"강원대 (삼척·도계)","d":"보건과학대학","c":["물리학","화학","생명과학","영어"],"r":["영어"]},{"u":"강원대 (삼척·도계)","d":"보건과학대학","c":["생명과학","확률과통계","윤리"],"r":["사회"]},{"u":"강원대 (삼척·도계)","d":"독립학부","c":["사회","윤리"],"r":["국어","사회"]},{"u":"강원대 (삼척·도계)","d":"독립학부","c":["물리학","화학","생명과학","지구과학","미적분Ⅰ","확률과통계"],"r":["국어"]},{"u":"한라대","d":"스마트모빌리티융합대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"스마트모빌리티융합대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"스마트모빌리티융합대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"스마트모빌리티융합대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"스마트모빌리티융합대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"스마트모빌리티융합대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"스마트모빌리티융합대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"스마트모빌리티융합대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"스마트모빌리티융합대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"웰니스지역공학대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"웰니스지역공학대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"웰니스지역공학대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"웰니스지역공학대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"웰니스지역공학대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"웰니스지역공학대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"웰니스지역공학대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"웰니스지역공학대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"웰니스지역공학대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"미래라이프융합대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"미래라이프융합대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"미래라이프융합대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"한라대","d":"운곡프론티어교양대학","c":["국어","영어","사회","역사"],"r":[]},{"u":"충북대","d":"인문대학","c":["국어","사회","역사"],"r":[]},{"u":"충북대","d":"인문대학","c":["국어","사회","역사"],"r":[]},{"u":"충북대","d":"인문대학","c":["국어","사회","역사"],"r":[]},{"u":"충북대","d":"인문대학","c":["국어","사회","역사"],"r":[]},{"u":"충북대","d":"인문대학","c":["국어","영어","사회"],"r":[]},{"u":"충북대","d":"인문대학","c":["국어","영어","사회"],"r":[]},{"u":"충북대","d":"인문대학","c":["국어","영어","사회"],"r":[]},{"u":"충북대","d":"인문대학","c":["국어","영어","사회"],"r":[]},{"u":"충북대","d":"인문대학","c":["국어","영어"],"r":[]},{"u":"충북대","d":"사범대학","c":["국어","사회","역사"],"r":[]},{"u":"충북대","d":"사범대학","c":["국어","사회","역사"],"r":[]},{"u":"충북대","d":"사범대학","c":["국어","사회","역사"],"r":[]},{"u":"충북대","d":"사범대학","c":["국어","사회","역사"],"r":[]},{"u":"충북대","d":"사범대학","c":["국어","사회","역사"],"r":[]},{"u":"충북대","d":"사범대학","c":["영어","사회","역사"],"r":[]},{"u":"충북대","d":"사범대학","c":["국어","영어"],"r":[]},{"u":"충북대","d":"생활과학대학","c":["국어","사회","역사"],"r":[]},{"u":"충북대","d":"생활과학대학","c":["국어","사회","역사"],"r":[]},{"u":"충북대","d":"생활과학대학","c":["사회","역사"],"r":[]},{"u":"충북대","d":"생활과학대학","c":["사회","역사"],"r":[]},{"u":"충북대","d":"사회과학대학","c":["영어","사회","역사"],"r":[]},{"u":"충북대","d":"사회과학대학","c":["영어","사회","역사"],"r":[]},{"u":"충북대","d":"사회과학대학","c":["영어","사회","역사"],"r":[]},{"u":"충북대","d":"사회과학대학","c":["영어"],"r":[]},{"u":"충북대","d":"사회과학대학","c":["영어"],"r":[]},{"u":"충북대","d":"경영대학","c":["영어","사회","역사"],"r":[]},{"u":"충북대","d":"경영대학","c":["영어","사회","역사"],"r":[]},{"u":"충북대","d":"경영대학","c":["영어","사회","역사"],"r":[]},{"u":"충북대","d":"농업생명환경대학","c":["영어"],"r":[]},{"u":"충북대","d":"수의과대학","c":["영어"],"r":[]},{"u":"충북대","d":"약학대학","c":["영어"],"r":[]},{"u":"충북대","d":"의과대학","c":["영어"],"r":[]},{"u":"충북대","d":"간호대학","c":["영어"],"r":[]},{"u":"충북대","d":"창의융합대학","c":["영어"],"r":[]},{"u":"단국대 (천안)","d":"인문계열","c":["국어","영어","사회"],"r":[]},{"u":"단국대 (천안)","d":"인문계열","c":["국어","영어","사회"],"r":[]},{"u":"단국대 (천안)","d":"인문계열","c":["국어","영어","사회"],"r":[]},{"u":"단국대 (천안)","d":"인문계열","c":["국어","영어","사회"],"r":[]},{"u":"단국대 (천안)","d":"자연계열","c":["국어","영어"],"r":[]},{"u":"단국대 (천안)","d":"자연계열","c":["국어","영어"],"r":[]},{"u":"단국대 (천안)","d":"자연계열","c":["국어","영어"],"r":[]},{"u":"단국대 (천안)","d":"자연계열","c":["국어","영어"],"r":[]},{"u":"단국대 (천안)","d":"자연계열","c":["국어","영어"],"r":[]},{"u":"단국대 (천안)","d":"자연계열","c":["국어","영어"],"r":[]},{"u":"단국대 (천안)","d":"자연계열","c":["국어","영어"],"r":[]},{"u":"한국기술교육대","d":"공합융합계열","c":["국어","영어"],"r":[]},{"u":"한국기술교육대","d":"공합융합계열","c":["국어","영어"],"r":[]},{"u":"한국기술교육대","d":"공합융합계열","c":["국어","영어"],"r":[]},{"u":"한국기술교육대","d":"공합융합계열","c":["국어","영어"],"r":[]},{"u":"한국기술교육대","d":"공합융합계열 에너지신소재화학공학부","c":["국어","영어"],"r":[]},{"u":"한국기술교육대","d":"공합융합계열 에너지신소재화학공학부","c":["국어","영어"],"r":[]},{"u":"한국기술교육대","d":"ICT융합계열 전기·전자·통신공학부","c":["국어","영어"],"r":[]},{"u":"한국기술교육대","d":"ICT융합계열 전기·전자·통신공학부","c":["국어","영어"],"r":[]},{"u":"한국기술교육대","d":"ICT융합계열 전기·전자·통신공학부","c":["국어","영어"],"r":[]},{"u":"한국기술교육대","d":"ICT융합계열 컴퓨터공학부","c":["국어","영어"],"r":[]},{"u":"한국기술교육대","d":"ICT융합계열 컴퓨터공학부","c":["국어","영어"],"r":[]},{"u":"한국기술교육대","d":"사회융합계열 경영학부","c":["국어","영어","사회"],"r":[]},{"u":"한국기술교육대","d":"사회융합계열 경영학부","c":["국어","영어","사회"],"r":[]},{"u":"한국기술교육대","d":"사회융합계열","c":["국어","영어","사회"],"r":[]},{"u":"전남대 (광주)","d":"간호대학","c":["영어"],"r":[]},{"u":"전남대 (광주)","d":"경영대학","c":["사회"],"r":[]},{"u":"전남대 (광주)","d":"경영대학","c":["영어","사회"],"r":[]},{"u":"전남대 (광주)","d":"공과대학","c":["영어","사회"],"r":[]},{"u":"전남대 (광주)","d":"공과대학","c":["물리학"],"r":[]},{"u":"전남대 (광주)","d":"공과대학","c":["물리학"],"r":[]},{"u":"전남대 (광주)","d":"공과대학","c":["물리학"],"r":[]},{"u":"전남대 (광주)","d":"공과대학","c":["물리학"],"r":[]},{"u":"전남대 (광주)","d":"공과대학","c":["화학"],"r":[]},{"u":"전남대 (광주)","d":"공과대학","c":["화학"],"r":[]},{"u":"전남대 (광주)","d":"공과대학","c":["물리학","화학"],"r":[]},{"u":"전남대 (광주)","d":"공과대학","c":["물리학","화학"],"r":[]},{"u":"전남대 (광주)","d":"공과대학","c":["물리학","화학"],"r":[]},{"u":"전남대 (광주)","d":"공과대학","c":["영어"],"r":[]},{"u":"전남대 (광주)","d":"공과대학","c":["화학","생명과학"],"r":[]},{"u":"전남대 (광주)","d":"농업생명과학대학","c":["화학","생명과학","영어"],"r":[]},{"u":"전남대 (광주)","d":"농업생명과학대학","c":["화학","생명과학","영어"],"r":[]},{"u":"전남대 (광주)","d":"농업생명과학대학","c":["화학","생명과학","영어"],"r":[]},{"u":"전남대 (광주)","d":"농업생명과학대학","c":["화학","생명과학","영어"],"r":[]},{"u":"전남대 (광주)","d":"농업생명과학대학","c":["화학","생명과학","영어"],"r":[]},{"u":"전남대 (광주)","d":"농업생명과학대학","c":["화학","생명과학","영어"],"r":[]},{"u":"전남대 (광주)","d":"농업생명과학대학","c":["화학","생명과학","영어"],"r":[]},{"u":"전남대 (광주)","d":"농업생명과학대학","c":["화학","생명과학","영어"],"r":[]},{"u":"전남대 (광주)","d":"농업생명과학대학","c":["생명과학","영어"],"r":[]},{"u":"전남대 (광주)","d":"농업생명과학대학","c":["생명과학","지구과학","영어"],"r":[]},{"u":"전남대 (광주)","d":"농업생명과학대학","c":["물리학"],"r":[]},{"u":"전남대 (광주)","d":"농업생명과학대학","c":["화학","생명과학","영어"],"r":[]},{"u":"전남대 (광주)","d":"농업생명과학대학","c":["영어","사회"],"r":[]},{"u":"전남대 (광주)","d":"농업생명과학대학","c":["물리학","생명과학"],"r":[]},{"u":"전남대 (광주)","d":"사범대학","c":["국어"],"r":[]},{"u":"전남대 (광주)","d":"사범대학","c":["영어"],"r":[]},{"u":"전남대 (광주)","d":"사범대학","c":["국어","영어","사회"],"r":[]},{"u":"전남대 (광주)","d":"사범대학","c":["국어","영어"],"r":[]},{"u":"전남대 (광주)","d":"사범대학","c":["국어","영어","지리"],"r":[]},{"u":"전남대 (광주)","d":"사범대학","c":["국어","역사"],"r":[]},{"u":"전남대 (광주)","d":"사범대학","c":["윤리"],"r":[]},{"u":"전남대 (광주)","d":"사범대학","c":["물리학"],"r":[]},{"u":"전남대 (광주)","d":"사범대학","c":["화학"],"r":[]},{"u":"전남대 (광주)","d":"사범대학","c":["생명과학","영어"],"r":[]},{"u":"전남대 (광주)","d":"사범대학","c":["물리학","지구과학"],"r":[]},{"u":"전남대 (광주)","d":"사범대학","c":["화학","사회","정보"],"r":[]},{"u":"전남대 (광주)","d":"사범대학","c":["국어","사회","윤리"],"r":[]},{"u":"전남대 (광주)","d":"사회과학대학","c":["영어","사회"],"r":[]},{"u":"전남대 (광주)","d":"사회과학대학","c":["영어","사회"],"r":[]},{"u":"전남대 (광주)","d":"사회과학대학","c":["영어","사회"],"r":[]},{"u":"전남대 (광주)","d":"사회과학대학","c":["영어","사회"],"r":[]},{"u":"전남대 (광주)","d":"사회과학대학","c":["국어","영어","사회"],"r":[]},{"u":"전남대 (광주)","d":"사회과학대학","c":["국어","영어","사회"],"r":[]},{"u":"전남대 (광주)","d":"사회과학대학","c":["지리"],"r":[]},{"u":"전남대 (광주)","d":"사회과학대학","c":["영어","사회","역사"],"r":[]},{"u":"전남대 (광주)","d":"생활과학대학","c":["국어","영어","사회"],"r":[]},{"u":"전남대 (광주)","d":"생활과학대학","c":["화학","생명과학"],"r":[]},{"u":"전남대 (광주)","d":"생활과학대학","c":["화학","영어","정보"],"r":[]},{"u":"전남대 (광주)","d":"수의과대학","c":["화학","생명과학","영어"],"r":[]},{"u":"전남대 (광주)","d":"약학대학","c":["화학","생명과학"],"r":[]},{"u":"전남대 (광주)","d":"의과대학","c":["생명과학","영어"],"r":[]},{"u":"전남대 (광주)","d":"인문대학","c":["국어"],"r":[]},{"u":"전남대 (광주)","d":"인문대학","c":["영어","사회"],"r":[]},{"u":"전남대 (광주)","d":"인문대학","c":["영어"],"r":[]},{"u":"전남대 (광주)","d":"인문대학","c":["영어"],"r":[]},{"u":"전남대 (광주)","d":"인문대학","c":["국어"],"r":[]},{"u":"전남대 (광주)","d":"인문대학","c":["역사"],"r":[]},{"u":"전남대 (광주)","d":"인문대학","c":["국어","윤리"],"r":[]},{"u":"전남대 (광주)","d":"자연과학대학","c":["물리학"],"r":[]},{"u":"전남대 (광주)","d":"자연과학대학","c":["영어"],"r":[]},{"u":"전남대 (광주)","d":"자연과학대학","c":["물리학","영어"],"r":[]},{"u":"전남대 (광주)","d":"자연과학대학","c":["물리학","지구과학"],"r":[]},{"u":"전남대 (광주)","d":"자연과학대학","c":["화학","생명과학","영어"],"r":[]},{"u":"전남대 (광주)","d":"자연과학대학","c":["화학"],"r":[]},{"u":"전남대 (광주)","d":"자연과학대학","c":["화학","생명과학","영어"],"r":[]},{"u":"전남대 (광주)","d":"AI융합대학","c":["영어"],"r":[]},{"u":"전남대 (광주)","d":"AI융합대학","c":["영어"],"r":[]},{"u":"전남대 (광주)","d":"AI융합대학","c":["물리학"],"r":[]},{"u":"전남대 (광주)","d":"자율전공학부(4년)","c":["국어","영어"],"r":[]},{"u":"전남대 (광주)","d":"치의학전문대학원(학석사통합과정)","c":["화학","생명과학"],"r":[]},{"u":"조선대","d":"글로벌인문대학","c":["국어","사회"],"r":[]},{"u":"조선대","d":"글로벌인문대학","c":["국어","사회"],"r":[]},{"u":"조선대","d":"글로벌인문대학","c":["영어"],"r":[]},{"u":"조선대","d":"글로벌인문대학","c":["한국사","사회"],"r":[]},{"u":"조선대","d":"글로벌인문대학","c":["국어","영어","사회"],"r":[]},{"u":"조선대","d":"글로벌인문대학","c":["국어","영어","사회"],"r":[]},{"u":"조선대","d":"글로벌인문대학","c":["국어","영어"],"r":[]},{"u":"조선대","d":"글로벌인문대학","c":["국어","영어"],"r":[]},{"u":"조선대","d":"자연과학·공공보건안전대학","c":["영어"],"r":[]},{"u":"조선대","d":"자연과학·공공보건안전대학","c":["영어"],"r":[]},{"u":"조선대","d":"자연과학·공공보건안전대학","c":["영어","사회"],"r":[]},{"u":"조선대","d":"자연과학·공공보건안전대학","c":["국어","영어"],"r":[]},{"u":"조선대","d":"자연과학·공공보건안전대학","c":["국어","영어"],"r":[]},{"u":"조선대","d":"자연과학·공공보건안전대학","c":["영어"],"r":[]},{"u":"조선대","d":"법사회대학","c":["국어","사회"],"r":[]},{"u":"조선대","d":"법사회대학","c":["국어","사회"],"r":[]},{"u":"조선대","d":"법사회대학","c":["국어","사회"],"r":[]},{"u":"조선대","d":"법사회대학","c":["영어","사회"],"r":[]},{"u":"조선대","d":"법사회대학","c":["사회"],"r":[]},{"u":"조선대","d":"경상대학","c":["영어"],"r":[]},{"u":"조선대","d":"경상대학","c":["사회"],"r":[]},{"u":"조선대","d":"경상대학","c":["영어","사회"],"r":[]},{"u":"조선대","d":"공과대학","c":["사회"],"r":[]},{"u":"조선대","d":"IT융합대학","c":["영어"],"r":[]},{"u":"조선대","d":"사범대학","c":["국어"],"r":[]},{"u":"조선대","d":"사범대학","c":["영어"],"r":[]},{"u":"조선대","d":"사범대학","c":["국어"],"r":[]},{"u":"조선대","d":"사범대학","c":["국어","영어"],"r":[]},{"u":"조선대","d":"의과대학","c":["영어"],"r":[]},{"u":"조선대","d":"미술대학","c":["국어","사회"],"r":[]},{"u":"조선대","d":"미술대학","c":["국어","사회"],"r":[]},{"u":"조선대","d":"미술대학","c":["국어","사회"],"r":[]},{"u":"조선대","d":"미술대학","c":["국어","사회"],"r":[]},{"u":"조선대","d":"미술대학","c":["국어"],"r":[]},{"u":"조선대","d":"체육대학","c":["국어"],"r":[]},{"u":"조선대","d":"체육대학","c":["국어","영어"],"r":[]},{"u":"조선대","d":"체육대학","c":["국어"],"r":[]},{"u":"조선대","d":"자유전공학부","c":["영어"],"r":[]},{"u":"원광대","d":"의약학계열","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"원광대","d":"의약학계열","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"원광대","d":"의약학계열","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"원광대","d":"의약학계열","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"원광대","d":"의약학계열","c":["화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계"],"r":[]},{"u":"원광대","d":"의약학계열","c":["화학","생명과학","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"원광대","d":"의약학계열","c":["화학","생명과학","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"원광대","d":"의약학계열","c":["화학","생명과학","미적분Ⅰ","대수","확률과통계"],"r":[]},{"u":"전북대","d":"본부","c":["영어"],"r":[]},{"u":"전북대","d":"간호대학","c":["영어"],"r":[]},{"u":"전북대","d":"경상대학","c":["영어"],"r":[]},{"u":"전북대","d":"농업생명과학대학","c":["영어"],"r":[]},{"u":"전북대","d":"사범대학","c":["국어","영어"],"r":[]},{"u":"전북대","d":"사범대학","c":["국어"],"r":[]},{"u":"전북대","d":"사범대학","c":["영어"],"r":[]},{"u":"전북대","d":"사범대학","c":["국어","영어"],"r":[]},{"u":"전북대","d":"사범대학","c":["사회"],"r":[]},{"u":"전북대","d":"사회과학대학","c":["영어","사회"],"r":[]},{"u":"전북대","d":"생활과학대학","c":["영어"],"r":[]},{"u":"전북대","d":"수의과대학","c":["영어"],"r":[]},{"u":"전북대","d":"의과대학","c":["영어"],"r":[]},{"u":"전북대","d":"인문대학","c":["사회"],"r":[]},{"u":"전북대","d":"인문대학","c":["국어","영어"],"r":[]},{"u":"전북대","d":"인문대학","c":["영어"],"r":[]},{"u":"전북대","d":"인문대학","c":["영어"],"r":[]},{"u":"전북대","d":"인문대학","c":["사회"],"r":[]},{"u":"전북대","d":"인문대학","c":["영어"],"r":[]},{"u":"전북대","d":"인문대학","c":["국어","영어"],"r":[]},{"u":"전북대","d":"인문대학","c":["영어"],"r":[]},{"u":"전북대","d":"인문대학","c":["국어","영어"],"r":[]},{"u":"전북대","d":"인문대학","c":["국어","사회"],"r":[]},{"u":"전북대","d":"인문대학","c":["영어"],"r":[]},{"u":"전북대","d":"인문대학","c":["영어","사회"],"r":[]},{"u":"전북대","d":"자연과학대학","c":["사회"],"r":[]},{"u":"전북대","d":"환경생명자원대학","c":["영어"],"r":[]},{"u":"전주대","d":"인문콘텐츠대학","c":["국어","영어","사회"],"r":[]},{"u":"전주대","d":"사회과학대학","c":["사회","윤리"],"r":[]},{"u":"전주대","d":"사회과학대학","c":["영어","사회","윤리"],"r":[]},{"u":"전주대","d":"사회과학대학","c":["사회","윤리"],"r":[]},{"u":"전주대","d":"사회과학대학","c":["사회","윤리"],"r":[]},{"u":"전주대","d":"사회과학대학","c":["확률과통계","영어","사회","윤리"],"r":[]},{"u":"전주대","d":"경영대학","c":["국어"],"r":[]},{"u":"전주대","d":"의과학대학","c":["국어","영어"],"r":[]},{"u":"전주대","d":"의과학대학","c":["영어"],"r":[]},{"u":"전주대","d":"의과학대학","c":["물리학","화학","생명과학","미적분Ⅱ","미적분Ⅰ","기하","대수","확률과통계","인공지능수학"],"r":[]},{"u":"전주대","d":"의과학대학","c":["영어"],"r":[]},{"u":"전주대","d":"의과학대학","c":["국어","사회"],"r":[]},{"u":"전주대","d":"의과학대학","c":["국어","사회"],"r":[]},{"u":"전주대","d":"의과학대학","c":["국어","영어"],"r":[]},{"u":"전주대","d":"공과대학","c":["미적분Ⅱ","미적분Ⅰ","기하","대수","국어","영어","사회"],"r":[]},{"u":"전주대","d":"공과대학","c":["국어"],"r":[]},{"u":"전주대","d":"공과대학","c":["미적분Ⅱ","미적분Ⅰ","기하","대수"],"r":[]},{"u":"전주대","d":"공과대학","c":["물리학","미적분Ⅱ","미적분Ⅰ"],"r":[]},{"u":"전주대","d":"공과대학","c":["물리학","화학","미적분Ⅰ"],"r":[]},{"u":"전주대","d":"공과대학","c":["미적분Ⅰ"],"r":[]},{"u":"전주대","d":"공과대학","c":["물리학","정보","인공지능수학"],"r":[]},{"u":"전주대","d":"소프트웨어융합대학","c":["미적분Ⅰ","대수","확률과통계","인공지능수학"],"r":[]},{"u":"전주대","d":"소프트웨어융합대학","c":["정보","인공지능수학"],"r":[]},{"u":"전주대","d":"소프트웨어융합대학","c":["미적분Ⅰ","대수","확률과통계","인공지능수학"],"r":[]},{"u":"전주대","d":"소프트웨어융합대학","c":["미적분Ⅱ","미적분Ⅰ","대수","확률과통계","정보","인공지능수학"],"r":[]},{"u":"전주대","d":"문화융합대학","c":["국어"],"r":[]},{"u":"전주대","d":"문화융합대학","c":["국어","사회"],"r":[]},{"u":"전주대","d":"문화관광대학","c":["영어"],"r":[]},{"u":"전주대","d":"문화관광대학","c":["영어","사회"],"r":[]},{"u":"전주대","d":"문화관광대학","c":["영어"],"r":[]},{"u":"전주대","d":"문화관광대학","c":["영어"],"r":[]},{"u":"전주대","d":"문화관광대학","c":["영어"],"r":[]},{"u":"전주대","d":"사범대학","c":["국어"],"r":[]},{"u":"전주대","d":"사범대학","c":["영어"],"r":[]},{"u":"전주대","d":"사범대학","c":["국어"],"r":[]},{"u":"전주대","d":"사범대학","c":["물리학","화학","생명과학","지구과학"],"r":[]},{"u":"전주대","d":"반려동물산업학부","c":["영어"],"r":[]},{"u":"전남대 (여수)","d":"공과대학","c":["물리학","화학"],"r":[]},{"u":"전남대 (여수)","d":"공과대학","c":["국어","사회"],"r":[]},{"u":"전남대 (여수)","d":"공과대학","c":["영어"],"r":[]},{"u":"전남대 (여수)","d":"공과대학","c":["화학"],"r":[]},{"u":"전남대 (여수)","d":"문화사회과학대학","c":["영어"],"r":[]},{"u":"전남대 (여수)","d":"문화사회과학대학","c":["국어"],"r":[]},{"u":"전남대 (여수)","d":"문화사회과학대학","c":["국어","영어","사회"],"r":[]},{"u":"전남대 (여수)","d":"문화사회과학대학","c":["국어","영어","사회"],"r":[]},{"u":"전남대 (여수)","d":"문화사회과학대학","c":["국어","영어"],"r":[]},{"u":"전남대 (여수)","d":"문화사회과학대학","c":["사회"],"r":[]},{"u":"전남대 (여수)","d":"수산해양대학","c":["생명과학","지구과학","영어"],"r":[]},{"u":"전남대 (여수)","d":"수산해양대학","c":["영어"],"r":[]},{"u":"전남대 (여수)","d":"수산해양대학","c":["물리학","영어"],"r":[]},{"u":"전남대 (여수)","d":"수산해양대학","c":["화학","생명과학"],"r":[]},{"u":"전남대 (여수)","d":"수산해양대학","c":["생명과학","지구과학"],"r":[]},{"u":"전남대 (여수)","d":"창의융합학부","c":["영어","사회"],"r":[]},{"u":"전남대 (여수)","d":"조기취업형계약학과","c":["물리학"],"r":[]},{"u":"전남대 (여수)","d":"조기취업형계약학과","c":["물리학"],"r":[]},{"u":"전남대 (여수)","d":"조기취업형계약학과","c":["물리학"],"r":[]},{"u":"전남대 (여수)","d":"조기취업형계약학과","c":["물리학"],"r":[]}];
+
+// ─── 과목명 → 키워드 매핑 ───────────────────────────────────
+var SUBJ_KW = {
+  '국어':['국어'],'화법과 언어':['국어'],'독서와 작문':['국어'],'문학':['국어'],
+  '주제 탐구 독서':['국어'],'독서 토론과 글쓰기':['국어'],'언어생활 탐구':['국어'],
+  '대수':['대수','수학'],'미적분Ⅰ':['미적분Ⅰ','수학'],'확률과 통계':['확률과통계','수학'],
+  '미적분Ⅱ':['미적분Ⅱ','수학'],'기하':['기하','수학'],
+  '인공지능 수학':['인공지능수학','수학'],'경제 수학':['수학'],
+  '영어Ⅰ':['영어'],'영어Ⅱ':['영어'],'영어 독해와 작문':['영어'],
+  '심화 영어 독해와 작문':['영어'],'영어 발표와 토론':['영어'],
+  '영미 문학 읽기':['영어'],'세계 문화와 영어':['영어'],'심화 영어':['영어'],
+  '세계시민과 지리':['사회','지리'],'세계사':['역사','사회'],'사회와 문화':['사회'],
+  '현대사회와 윤리':['윤리','사회'],'한국지리 탐구':['지리','사회'],
+  '동아시아 역사 기행':['역사'],'경제':['사회'],'정치':['사회'],
+  '윤리와 사상':['윤리'],'법과 사회':['사회'],'인문학과 윤리':['윤리','사회'],
+  '물리학':['물리학'],'역학과 에너지':['물리학'],'전자기와 양자':['물리학'],
+  '화학':['화학'],'물질과 에너지':['화학'],'화학 반응의 세계':['화학'],
+  '생명과학':['생명과학'],'세포와 물질대사':['생명과학'],'생물의 유전':['생명과학'],
+  '지구과학':['지구과학'],'지구시스템과학':['지구과학'],'행성우주과학':['지구과학'],
+  '정보':['정보'],'인공지능 기초':['정보'],'데이터 과학':['정보'],
+  '인공지능과 미래사회':['정보','인공지능수학'],
+  '수학과 논리적 사고':['수학'],'일본어':['국어'],'중국어':['국어'],
+};
+
+function getKWs(names){
+  var kws=[];
+  names.forEach(function(nm){
+    var mapped=SUBJ_KW[nm];
+    if(mapped){mapped.forEach(function(k){if(kws.indexOf(k)<0)kws.push(k);});}
+    else{
+      // partial match
+      Object.keys(SUBJ_KW).forEach(function(k){
+        if(nm.indexOf(k)>=0||k.indexOf(nm)>=0){
+          SUBJ_KW[k].forEach(function(kw){if(kws.indexOf(kw)<0)kws.push(kw);});
+        }
+      });
+    }
+  });
+  return kws;
+}
+
+function calcRate(selectedNames, entry){
+  var kws=getKWs(selectedNames);
+  var req=entry.c;
+  if(!req||!req.length) return null;
+  var met=0;
+  req.forEach(function(r){if(kws.indexOf(r)>=0)met++;});
+  return {rate:Math.round(met/req.length*100),met:met,total:req.length,
+    missing:req.filter(function(r){return kws.indexOf(r)<0;})};
+}
+
+// ─── 플래너 UI ───────────────────────────────────────────────
+var PLAN_SELS={single:[],p1:[],p2:[],p3:[]};
+var PLANNER_INITED=false;
+
+function initPlannerUI(){
+  if(PLANNER_INITED)return;
+  PLANNER_INITED=true;
+  buildSubjGrid('subjGrid','single');
+  buildCompareUI();
+}
+
+function buildSubjGrid(gridId,planKey){
+  var grid=document.getElementById(gridId);
+  if(!grid)return;
+  var sb=getSB(CUR_YEAR);
+  grid.innerHTML='';
+  sb.forEach(function(s){
+    if(s.e==='abs_ac')return;
+    var btn=document.createElement('button');
+    btn.className='subj-btn';
+    btn.textContent=s.nm+(s.campus?' 🏫':'');
+    btn.dataset.nm=s.nm;
+    btn.onclick=function(){
+      var sel=PLAN_SELS[planKey];
+      var idx=sel.indexOf(s.nm);
+      if(idx>=0){sel.splice(idx,1);btn.className='subj-btn';}
+      else{sel.push(s.nm);btn.className='subj-btn on';}
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function buildCompareUI(){
+  var cols=document.getElementById('planCols');
+  if(!cols)return;
+  cols.innerHTML='';
+  ['p1','p2','p3'].forEach(function(pk,i){
+    var label=['1안','2안','3안'][i];
+    var col=document.createElement('div');
+    col.className='cmp-col';
+    col.innerHTML='<div class="cmp-hd">'+label+'</div>'
+      +'<div class="sec-ttl">선택 과목</div>'
+      +'<div class="subj-grid" id="grid_'+pk+'"></div>';
+    cols.appendChild(col);
+    buildSubjGrid('grid_'+pk,pk);
+  });
+}
+
+function clearSel(planKey){
+  PLAN_SELS[planKey]=[];
+  var gridId=planKey==='single'?'subjGrid':'grid_'+planKey;
+  var g=document.getElementById(gridId);
+  if(g)g.querySelectorAll('.subj-btn').forEach(function(b){b.className='subj-btn';});
+  if(planKey==='single')document.getElementById('fulfillResult').innerHTML='';
+}
+
+function swPlanTab(t){
+  document.getElementById('planFulfill').className='plan-panel'+(t==='fulfill'?' on':'');
+  document.getElementById('planCompare').className='plan-panel'+(t==='compare'?' on':'');
+  document.getElementById('ptFulfill').className='plan-tab'+(t==='fulfill'?' on':'');
+  document.getElementById('ptCompare').className='plan-tab'+(t==='compare'?' on':'');
+}
+
+// ─── 충족률 계산 ─────────────────────────────────────────────
+function calcFulfill(){
+  var sel=PLAN_SELS['single'];
+  if(!sel.length){
+    document.getElementById('fulfillResult').innerHTML='<div class="wb wy">⚠️ 과목을 먼저 선택해주세요.</div>';
+    return;
+  }
+  document.getElementById('fulfillResult').innerHTML=renderFulfillHTML(sel,15);
+}
+
+function renderFulfillHTML(selectedNames, topN){
+  var results=[];
+  UNIV_DB.forEach(function(e){
+    var r=calcRate(selectedNames,e);
+    if(r===null)return;
+    results.push({univ:e.u,dept:e.d,rate:r.rate,met:r.met,total:r.total,missing:r.missing});
+  });
+  if(!results.length)return '<div class="wb wy">분석 가능한 데이터가 없습니다.</div>';
+  results.sort(function(a,b){return b.rate-a.rate;});
+  var top=results.slice(0,topN||15);
+  var high=results.filter(function(r){return r.rate>=80;}).length;
+  var mid=results.filter(function(r){return r.rate>=50&&r.rate<80;}).length;
+  var low=results.filter(function(r){return r.rate<50;}).length;
+
+  var h='<div class="wb wbl" style="margin-bottom:10px;">'
+    +'<strong>📊 분석 결과</strong> (총 '+results.length+'개 학과)<br>'
+    +'선택 과목: <strong>'+selectedNames.join(' · ')+'</strong><br>'
+    +'· 80% 이상: <strong style="color:#15803d;">'+high+'개 학과</strong>'
+    +' &nbsp; · 50~79%: <strong style="color:#d97706;">'+mid+'개 학과</strong>'
+    +' &nbsp; · 50% 미만: <strong style="color:#dc2626;">'+low+'개 학과</strong>'
+    +'</div>';
+
+  h+='<div style="font-size:12px;font-weight:700;color:#555;margin-bottom:6px;">🏆 충족률 상위 학과 TOP'+(topN||15)+'</div>';
+
+  top.forEach(function(r,i){
+    var rc=r.rate>=80?'fill-h':r.rate>=50?'fill-m':'fill-l';
+    var rv=r.rate>=80?'#15803d':r.rate>=50?'#d97706':'#dc2626';
+    h+='<div class="rank-card">'
+      +'<span class="rank-num">'+(i+1)+'</span>'
+      +'<span style="font-size:13px;font-weight:700;">'+r.dept+'</span> '
+      +'<span style="font-size:11px;color:#aaa;">'+r.univ+'</span>'
+      +'<span class="rank-pct" style="color:'+rv+';">'+r.rate+'%</span>'
+      +'<div class="meter-bar"><div class="meter-fill '+rc+'" style="width:'+r.rate+'%"></div></div>'
+      +'<div style="font-size:11px;color:#888;margin-top:2px;">'
+      +'충족 '+r.met+'/'+r.total+'개 핵심과목';
+    if(r.missing.length){
+      h+=' | 미충족: '+r.missing.map(function(m){return '<span class="chip-miss">'+m+'</span>';}).join('');
+    }
+    h+='</div></div>';
+  });
+
+  // Missing analysis
+  var missCnt={};
+  results.forEach(function(r){r.missing.forEach(function(m){missCnt[m]=(missCnt[m]||0)+1;});});
+  var missSort=Object.keys(missCnt).sort(function(a,b){return missCnt[b]-missCnt[a];});
+  if(missSort.length){
+    h+='<div class="wb wy" style="margin-top:10px;">'
+      +'<strong>⚠️ 가장 많이 미충족된 핵심과목</strong><br>';
+    missSort.slice(0,5).forEach(function(m){
+      h+='<span class="chip-miss">'+m+'</span> '+missCnt[m]+'개 학과 &nbsp;';
+    });
+    h+='<br><small>이 과목을 추가하면 더 많은 학과의 권장 조건을 충족할 수 있어요.</small></div>';
+  }
+  return h;
+}
+
+// ─── 1안/2안/3안 비교 ────────────────────────────────────────
+function calcCompare(){
+  var hasAny=['p1','p2','p3'].some(function(pk){return PLAN_SELS[pk].length>0;});
+  if(!hasAny){
+    document.getElementById('compareResult').innerHTML='<div class="wb wy">⚠️ 최소 1개 안의 과목을 선택하세요.</div>';
+    return;
+  }
+
+  var planRes={};
+  ['p1','p2','p3'].forEach(function(pk){
+    var sel=PLAN_SELS[pk];
+    if(!sel.length){planRes[pk]=null;return;}
+    var results=[];
+    UNIV_DB.forEach(function(e){
+      var r=calcRate(sel,e);
+      if(r===null)return;
+      results.push({univ:e.u,dept:e.d,rate:r.rate,met:r.met,total:r.total,missing:r.missing});
+    });
+    results.sort(function(a,b){return b.rate-a.rate;});
+    var avg=results.length?Math.round(results.reduce(function(s,r){return s+r.rate;},0)/results.length):0;
+    planRes[pk]={sel:sel,top:results.slice(0,5),avg:avg};
+  });
+
+  var h='<div style="font-size:12px;font-weight:700;color:#555;margin-bottom:8px;">📊 안별 비교 결과</div>';
+  h+='<div class="cmp-row">';
+
+  ['p1','p2','p3'].forEach(function(pk,i){
+    var label=['1안','2안','3안'][i];
+    var pr=planRes[pk];
+    h+='<div class="cmp-col"><div class="cmp-hd">'+label+'</div>';
+    if(!pr){h+='<div style="font-size:12px;color:#aaa;text-align:center;padding:20px 0;">미입력</div></div>';return;}
+
+    var rc=pr.avg>=80?'ring-h':pr.avg>=50?'ring-m':'ring-l';
+    h+='<div class="ring-wrap"><div class="ring '+rc+'">'+pr.avg+'%</div>'
+      +'<div style="font-size:11px;color:#888;">평균 충족률</div></div>';
+
+    h+='<div class="sec-ttl">선택 과목</div>';
+    pr.sel.forEach(function(s){h+='<span class="chip-ok">'+s+'</span>';});
+
+    h+='<div class="sec-ttl" style="margin-top:8px;">충족률 상위 학과 TOP5</div>';
+    pr.top.forEach(function(r,ri){
+      var rv=r.rate>=80?'#15803d':r.rate>=50?'#d97706':'#dc2626';
+      h+='<div style="margin-bottom:5px;">'
+        +'<span class="rank-num" style="width:16px;height:16px;line-height:16px;font-size:9px;">'+(ri+1)+'</span>'
+        +'<span style="font-size:11px;font-weight:600;">'+r.dept+'</span> '
+        +'<span style="font-size:10px;color:#aaa;">'+r.univ+'</span>'
+        +'<span style="font-size:11px;font-weight:700;color:'+rv+';float:right;">'+r.rate+'%</span>'
+        +'<div class="meter-bar"><div class="meter-fill '+(r.rate>=80?'fill-h':r.rate>=50?'fill-m':'fill-l')+'" style="width:'+r.rate+'%"></div></div>'
+        +'</div>';
+    });
+    h+='</div>';
+  });
+  h+='</div>';
+
+  var valid=['p1','p2','p3'].filter(function(pk){return planRes[pk]!==null;});
+  if(valid.length>=2){
+    var best=valid.reduce(function(a,b){return planRes[a].avg>=planRes[b].avg?a:b;});
+    var lbl=['p1','p2','p3'].indexOf(best);
+    h+='<div class="wb wg"><strong>💡 분석 결과:</strong> '
+      +'<strong>'+['1안','2안','3안'][lbl]+'</strong>이 평균 충족률 '
+      +'<strong>'+planRes[best].avg+'%</strong>로 가장 높습니다. '
+      +'대교협 권장과목 기준 더 많은 학과에 유리합니다.</div>';
+  }
+
+  document.getElementById('compareResult').innerHTML=h;
+}
+
+// ─── 결과 화면에 충족률 TOP5 자동 추가 ──────────────────────
+function getFulfillMiniHTML(selectedSubjectNames){
+  if(!selectedSubjectNames||!selectedSubjectNames.length)return '';
+  var results=[];
+  UNIV_DB.forEach(function(e){
+    var r=calcRate(selectedSubjectNames,e);
+    if(r===null)return;
+    results.push({univ:e.u,dept:e.d,rate:r.rate,met:r.met,total:r.total,missing:r.missing});
+  });
+  if(!results.length)return '';
+  results.sort(function(a,b){return b.rate-a.rate;});
+  var top=results.slice(0,5);
+  var h='<div class="fulfill-mini"><div class="fulfill-mini-title">📊 대교협 권장과목 충족률 TOP5 (선택 과목 기준)</div>';
+  top.forEach(function(r,i){
+    var rv=r.rate>=80?'#15803d':r.rate>=50?'#d97706':'#dc2626';
+    h+='<div style="margin-bottom:5px;">'
+      +'<span class="rank-num" style="width:18px;height:18px;line-height:18px;font-size:9px;">'+(i+1)+'</span>'
+      +'<span style="font-size:12px;font-weight:700;">'+r.dept+'</span> '
+      +'<span style="font-size:11px;color:#aaa;">'+r.univ+'</span>'
+      +'<span style="font-size:12px;font-weight:700;color:'+rv+';float:right;">'+r.rate+'%</span>'
+      +'<div class="meter-bar"><div class="meter-fill '+(r.rate>=80?'fill-h':r.rate>=50?'fill-m':'fill-l')+'" style="width:'+r.rate+'%"></div></div>'
+      +'</div>';
+  });
+  h+='<div style="font-size:11px;color:#888;margin-top:4px;">📊 탭에서 전체 분석 및 1안/2안/3안 비교를 확인할 수 있어요.</div>';
+  h+='</div>';
+  return h;
+}
+
+</script>
+
+<style>
+/* ===== v9 전문가형 그룹화 · 보고서 출력 개선 ===== */
+:root{
+  --ink:#111827;--muted:#667085;--line:#e5e7eb;--bg:#eef3f8;--card:#ffffff;
+  --blue:#2563eb;--blue2:#eff6ff;--navy:#0f172a;--green:#16a34a;--amber:#d97706;--red:#dc2626;
+}
+body{background:linear-gradient(180deg,#f5f8fc 0%,#eef3f8 100%);color:var(--ink);font-size:15px;}
+.wrap{max-width:1180px;padding:28px 24px 52px;}
+.hd{background:#0f172a;color:#fff;border-radius:26px;padding:26px 30px;margin-bottom:22px;box-shadow:0 20px 45px rgba(15,23,42,.16)}
+.hd h1{font-size:24px;margin-bottom:6px;letter-spacing:-.03em}.hd p{color:#cbd5e1;font-size:13px}
+.tabs{background:#fff;border:1px solid var(--line);border-radius:18px;padding:6px;margin-bottom:22px;box-shadow:0 10px 24px rgba(15,23,42,.05);gap:6px}.tab{flex:1;border-radius:13px;padding:13px 16px;margin:0;border:0;color:#667085;font-size:14px}.tab.on{background:#2563eb;color:#fff;border:0;box-shadow:0 8px 18px rgba(37,99,235,.22)}
+.yr-sel{background:#fff;border:1px solid var(--line);padding:8px;border-radius:16px;width:max-content}.yr-btn{border-radius:12px;padding:10px 18px;border:0;background:transparent}.yr-btn.on{background:#eff6ff;color:#1d4ed8}
+.card{border:1px solid var(--line);border-radius:28px;padding:28px 30px;margin-bottom:18px;box-shadow:0 14px 36px rgba(15,23,42,.06)}
+.ql{font-size:13px;color:#2563eb;font-weight:800;margin-bottom:8px}.qt{font-size:21px;letter-spacing:-.035em;margin-bottom:6px}.qs{font-size:14px;color:#667085;margin-bottom:22px}.prog{height:8px;border-radius:999px;background:#e5e7eb}.pf{background:linear-gradient(90deg,#2563eb,#06b6d4)}
+.bn{border-radius:999px;padding:12px 22px;font-size:14px;box-shadow:0 10px 20px rgba(37,99,235,.22)}.brs,.bsk,.btn-pdf,.btn-upload,.btn-tmpl{border-radius:999px;padding:10px 16px}
+/* 질문 선택 영역: 가로 나열 대신 세로 그룹 카드 */
+.choice-stack{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:18px}.choice-group{border:1px solid #e4e7ec;background:#fff;border-radius:22px;overflow:hidden}.choice-group-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:linear-gradient(90deg,#f8fafc,#eef6ff);border-bottom:1px solid #e5e7eb}.choice-group-title{font-size:15px;font-weight:900;color:#0f172a}.choice-group-sub{font-size:12px;font-weight:700;color:#2563eb;background:#dbeafe;border-radius:999px;padding:4px 9px}.choice-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;padding:16px}.b,.subj-btn{border-radius:14px;padding:11px 14px;background:#fff;border:1px solid #d0d5dd;color:#344054;text-align:left;font-size:14px}.b:hover,.subj-btn:hover{border-color:#2563eb;background:#eff6ff}.b.on,.subj-btn.on{background:#2563eb;color:#fff;border-color:#2563eb;box-shadow:0 8px 18px rgba(37,99,235,.22)}.cdesc{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:16px;padding:10px 14px;color:#166534;margin:12px 0}
+/* 교과군별 선택 과목 */
+.subject-area-stack{display:grid;grid-template-columns:1fr;gap:14px}.subject-area-card{border:1px solid #e4e7ec;background:#fff;border-radius:22px;overflow:hidden}.subject-area-head{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:#f8fafc;border-left:7px solid #2563eb}.subject-area-head strong{font-size:15px;color:#0f172a}.subject-area-head span{font-size:12px;color:#475467;background:#fff;border:1px solid #d0d5dd;border-radius:999px;padding:4px 9px}.subject-area-body{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;padding:14px 16px}.subject-area-card[data-area="수학"] .subject-area-head{border-left-color:#7c3aed}.subject-area-card[data-area="과학"] .subject-area-head{border-left-color:#16a34a}.subject-area-card[data-area="사회"] .subject-area-head{border-left-color:#f59e0b}.subject-area-card[data-area="정보"] .subject-area-head{border-left-color:#0891b2}.subject-area-card[data-area="국어"] .subject-area-head{border-left-color:#ef4444}.subject-area-card[data-area="영어"] .subject-area-head{border-left-color:#2563eb}
+/* 결과 화면 */
+.report-shell{background:#fff;border:1px solid #e5e7eb;border-radius:30px;padding:0;overflow:hidden;box-shadow:0 24px 55px rgba(15,23,42,.10)}.report-hero{background:linear-gradient(135deg,#0f172a,#1d4ed8);color:#fff;padding:30px}.report-kicker{font-size:12px;font-weight:900;letter-spacing:.12em;color:#bfdbfe;margin-bottom:8px}.report-title{font-size:28px;font-weight:900;letter-spacing:-.04em;line-height:1.25}.report-sub{font-size:14px;color:#dbeafe;margin-top:8px;max-width:780px}.report-body{padding:26px 30px}.report-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}.report-stat{border-radius:22px;background:#f8fafc;border:1px solid #e5e7eb;padding:18px}.report-stat b{display:block;font-size:30px;color:#1d4ed8;letter-spacing:-.04em}.report-stat span{font-size:13px;color:#667085;font-weight:700}.section-card{border:1px solid #e5e7eb;border-radius:24px;margin:18px 0;overflow:hidden;background:#fff}.section-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:18px 20px;background:#f8fafc;border-bottom:1px solid #e5e7eb}.section-card-title{font-size:19px;font-weight:900;color:#0f172a;letter-spacing:-.03em}.section-card-note{font-size:13px;color:#667085;margin-top:4px}.section-mark{font-size:12px;color:#1d4ed8;background:#dbeafe;border-radius:999px;padding:6px 10px;font-weight:900;white-space:nowrap}.area-grid{display:grid;grid-template-columns:1fr;gap:12px;padding:18px}.area-card{border:1px solid #e5e7eb;border-radius:20px;background:#fff;overflow:hidden}.area-title{background:#fbfdff;border-bottom:1px solid #e5e7eb;padding:12px 14px;font-size:15px;color:#0f172a}.area-title span:first-child{font-weight:900}.area-count{background:#eff6ff;color:#2563eb}.area-subjects{display:flex;flex-wrap:wrap;gap:8px;padding:14px}.tag{border-radius:999px;padding:7px 11px;font-size:13px}.tm{background:#dbeafe;color:#1d4ed8}.tr{background:#dcfce7;color:#15803d}.to{background:#fef3c7;color:#92400e}.tm2{background:#ede9fe;color:#6d28d9}.focus-panel,.strategy-box,.summary-grid,.result-section{display:none!important}.smart-warning{border-radius:20px;margin:10px 0;padding:14px 16px}.warning-stack{margin-top:20px}.action-strip{display:flex;gap:10px;justify-content:flex-end;margin-top:24px}.cmp-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.cmp-col{border-radius:24px;padding:16px}.cmp-hd{font-size:16px;border-bottom:1px solid #e5e7eb;color:#0f172a}.print-only{display:none}
+@media(max-width:820px){.wrap{padding:18px 14px}.report-grid,.cmp-row{grid-template-columns:1fr}.choice-list,.subject-area-body{grid-template-columns:1fr}.hd{border-radius:22px}.card{padding:22px 18px}.tabs{flex-direction:column}.report-body{padding:18px}.report-title{font-size:22px}}
+@media print{
+  body{background:#fff!important}.wrap{display:none!important}.print-only{display:block!important}.print-report{font-family:'Malgun Gothic','Noto Sans KR',sans-serif;color:#111827;padding:18mm}.pr-head{border-bottom:4px solid #1d4ed8;padding-bottom:10px;margin-bottom:16px}.pr-kicker{font-size:11px;color:#1d4ed8;font-weight:900;letter-spacing:.12em}.pr-title{font-size:24px;font-weight:900;margin-top:4px}.pr-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}.pr-meta div{border:1px solid #d0d5dd;border-radius:10px;padding:10px;font-size:12px}.pr-meta b{display:block;font-size:15px;color:#0f172a}.pr-section{break-inside:avoid;margin:14px 0}.pr-section h2{font-size:16px;background:#eff6ff;color:#1d4ed8;border-left:6px solid #1d4ed8;padding:9px 11px;border-radius:8px}.pr-area{border:1px solid #e5e7eb;border-radius:10px;margin:8px 0;break-inside:avoid}.pr-area h3{font-size:13px;background:#f8fafc;padding:8px 10px;border-bottom:1px solid #e5e7eb}.pr-chips{padding:8px}.pr-chip{display:inline-block;border:1px solid #cbd5e1;border-radius:999px;padding:5px 8px;margin:3px;font-size:12px}.pr-note{border:1px solid #fed7aa;background:#fff7ed;border-radius:10px;padding:10px;font-size:12px;line-height:1.65}.pr-table{width:100%;border-collapse:collapse;font-size:12px}.pr-table th,.pr-table td{border:1px solid #d0d5dd;padding:7px;text-align:left}.pr-table th{background:#f8fafc}.no-print{display:none!important}
+}
+</style>
+<div id="printReport" class="print-only"></div>
+<script>
+/* ===== v9 override: 세로 그룹화 + 보고서 출력 ===== */
+function groupByAreaSubjects(subjects){
+  var sb=getSB(CUR_YEAR), map={}; AREAS.forEach(function(a){map[a]=[]});
+  (subjects||[]).forEach(function(x){
+    var nm=typeof x==='string'?x:x.nm; var s=sb.find(function(t){return t.nm===nm})||SB_ALL.find(function(t){return t.nm===nm})||x;
+    if(!s||!s.a)return; if(!map[s.a].some(function(v){return v.nm===s.nm})) map[s.a].push(s);
+  });
+  return map;
+}
+function choiceGroupHTML(title,items,renderer){
+  return '<div class="choice-group"><div class="choice-group-head"><div class="choice-group-title">'+title+'</div><div class="choice-group-sub">'+items.length+'개</div></div><div class="choice-list">'+items.map(renderer).join('')+'</div></div>';
+}
+function simpleInterestGroups(list){
+  var groups=[
+    ['국어·언어', ['국어·글쓰기·논술','영어','제2외국어(일어·중어 등)']],
+    ['수학·정보', ['수학','정보·컴퓨터']],
+    ['과학', ['물리','화학','생명·생물','지구과학·환경']],
+    ['사회·인문', ['사회·역사·지리','경제·정치·법','심리학·사회복지']],
+    ['예체능·기타', ['음악','미술·디자인','체육·스포츠','기타']]
+  ];
+  var used={};
+  var out=groups.map(function(g){return {title:g[0], items:g[1].filter(function(x){used[x]=1;return list.indexOf(x)>=0;})};}).filter(function(g){return g.items.length});
+  var rest=list.filter(function(x){return !used[x]}); if(rest.length) out.push({title:'기타',items:rest});
+  return out;
+}
+renderStp = function(){
+  if(ST.done) return; updProg(); if(ST.step >= STP.length){ showRes(); return; }
+  var s=STP[ST.step]; if(document.getElementById('st'+ST.step)) return;
+  var d=document.createElement('div'); d.className='card'; d.id='st'+ST.step;
+  var h='<div class="ql">STEP '+(ST.step+1)+' / '+STP.length+'</div><div class="qt">'+s.q+'</div><div class="qs">'+s.s+'</div>';
+  if(s.tp==='multi_career'){
+    h+='<div class="choice-stack">';
+    CR_GROUPS.forEach(function(g){
+      h+=choiceGroupHTML(g.gname,g.items,function(item){var crIdx=CR.indexOf(item);return '<button class="b" id="ccb'+ST.step+'_'+crIdx+'" data-step="'+ST.step+'" data-cidx="'+crIdx+'" onclick="tgCareer(this)">'+CR[crIdx].l+'</button>';});
+    });
+    h+='</div><div class="cdesc" id="cd'+ST.step+'">선택하면 이곳에 선택한 계열이 정리됩니다.</div><button class="bn" onclick="dnCareer('+ST.step+')">선택 완료 →</button>';
+  }else if(s.tp==='multi'){
+    var groups=s.id==='int'?simpleInterestGroups(s.ch):[{title:'선택 항목',items:s.ch}];
+    h+='<div class="choice-stack">';
+    groups.forEach(function(g){h+=choiceGroupHTML(g.title,g.items,function(val){var k=s.ch.indexOf(val);return '<button class="b" id="mb'+ST.step+'_'+k+'" data-step="'+ST.step+'" data-idx="'+k+'" onclick="tgM(this)">'+val+'</button>';});});
+    h+='</div><button class="bn" onclick="dnM('+ST.step+')">선택 완료 →</button>';
+  }else{
+    h+='<textarea id="ta'+ST.step+'" placeholder="'+s.ph+'" rows="4"></textarea><br><button class="bn" onclick="dnT('+ST.step+')">다음 →</button><button class="bsk" onclick="skS('+ST.step+')">건너뛰기</button>';
+  }
+  d.innerHTML=h; document.getElementById('chat').appendChild(d); setTimeout(function(){d.scrollIntoView({behavior:'smooth',block:'nearest'});},60);
+};
+function groupedSubjectSelectHTML(targetId,planKey){
+  var map=groupByAreaSubjects(getSB(CUR_YEAR).filter(function(s){return s.e!=='abs_ac'})); var html='<div class="subject-area-stack">';
+  AREAS.forEach(function(ar){var list=map[ar]||[]; if(!list.length)return; html+='<div class="subject-area-card" data-area="'+ar+'"><div class="subject-area-head"><strong>'+areaEmoji(ar)+' '+ar+'</strong><span>'+list.length+'개 과목</span></div><div class="subject-area-body">';
+    list.forEach(function(s){var on=(PLAN_SELS[planKey]||[]).indexOf(s.nm)>=0?' on':''; html+='<button class="subj-btn'+on+'" data-nm="'+s.nm+'" onclick="togglePlanSubj(\''+planKey+'\',this)">'+s.nm+(s.campus?' 🏫':'')+'</button>';});
+    html+='</div></div>';});
+  html+='</div>'; document.getElementById(targetId).innerHTML=html;
+}
+buildSubjGrid=function(gridId,planKey){groupedSubjectSelectHTML(gridId,planKey)};
+buildCompareUI=function(){
+  var wrap=document.getElementById('planCols'); if(!wrap)return; wrap.innerHTML='';
+  ['p1','p2','p3'].forEach(function(k,i){var col=document.createElement('div'); col.className='cmp-col'; col.innerHTML='<div class="cmp-hd">'+(i+1)+'안</div><div class="sec-ttl">교과군별 선택 과목</div><div id="grid_'+k+'"></div>'; wrap.appendChild(col); groupedSubjectSelectHTML('grid_'+k,k);});
+};
+function togglePlanSubj(planKey,btn){var nm=btn.dataset.nm; if(!PLAN_SELS[planKey])PLAN_SELS[planKey]=[]; var a=PLAN_SELS[planKey],i=a.indexOf(nm); if(i>=0){a.splice(i,1);btn.classList.remove('on')}else{a.push(nm);btn.classList.add('on')}}
+function areaGroupedHTML(names, opts){
+  var map=groupByAreaSubjects(names); var html='<div class="area-grid">';
+  AREAS.forEach(function(ar){var list=map[ar]||[]; if(!list.length&&!(opts&&opts.showEmpty))return; html+='<div class="area-card"><div class="area-title"><span>'+areaEmoji(ar)+' '+ar+'</span><span class="area-count">'+list.length+'개</span></div>';
+    html+='<div class="area-subjects">'; if(list.length){list.forEach(function(s){html+=subjectChip(s.nm,s.t,s.campus)});}else{html+='<span class="area-empty">해당 과목 없음</span>';} html+='</div></div>';});
+  return html+'</div>';
+}
+function makePrintReport(careerLabels,recommendedSubs,commonSubs,fusionSubs,memo,cons,hrds){
+  var now=new Date(); var date=now.getFullYear()+'. '+(now.getMonth()+1)+'. '+now.getDate()+'.';
+  function prAreas(title,names){var map=groupByAreaSubjects(names), out='<div class="pr-section"><h2>'+title+'</h2>'; AREAS.forEach(function(ar){var list=map[ar]||[]; if(!list.length)return; out+='<div class="pr-area"><h3>'+areaEmoji(ar)+' '+ar+'</h3><div class="pr-chips">'+list.map(function(s){return '<span class="pr-chip">'+s.nm+' · '+s.t+'</span>';}).join('')+'</div></div>';}); return out+'</div>';}
+  var html='<div class="print-report"><div class="pr-head"><div class="pr-kicker">STUDENT SUBJECT CHOICE REPORT</div><div class="pr-title">선택과목 상담 보고서</div></div>';
+  html+='<div class="pr-meta"><div>학생명<b>________________</b></div><div>학년도<b>'+CUR_YEAR+'년 입학 기준</b></div><div>출력일<b>'+date+'</b></div></div>';
+  html+='<div class="pr-section"><h2>1. 학생 입력 내용</h2><table class="pr-table"><tr><th>희망 계열</th><td>'+careerLabels.join(' · ')+'</td></tr><tr><th>흥미 과목</th><td>'+((ST.ans[1]||[]).join(' · ')||'-')+'</td></tr><tr><th>부담 과목</th><td>'+((hrds||[]).join(' · ')||'-')+'</td></tr><tr><th>걱정 요소</th><td>'+((cons||[]).join(' · ')||'-')+'</td></tr><tr><th>학생 메모</th><td>'+(memo||'-')+'</td></tr></table></div>';
+  html+=prAreas('2. 교과군별 추천 과목',recommendedSubs); if(commonSubs&&commonSubs.length)html+=prAreas('3. 여러 계열 공통 핵심 과목',commonSubs); if(fusionSubs&&fusionSubs.length)html+=prAreas('4. 융합선택 후보',fusionSubs.map(function(s){return s.nm||s}));
+  html+='<div class="pr-section"><h2>5. 상담 체크 포인트</h2><div class="pr-note">① 일반선택·진로선택 등 등급 산출 과목을 먼저 확보합니다.<br>② 융합선택은 흥미 탐색용으로 활용하되 과다 선택을 피합니다.<br>③ 희망 계열이 여러 개인 학생은 공통 핵심 과목을 먼저 선택하고, 계열별 특화 과목을 추가합니다.<br>④ 최종 선택 전 담임·진로·교과 선생님과 학기별 이수 계획을 확인합니다.</div></div></div>';
+  document.getElementById('printReport').innerHTML=html;
+}
+showRes=function(){
+  ST.done=true; document.getElementById('pf').style.width='100%';
+  var cids=ST.cids.length?ST.cids:['un'], hrds=ST.ans[2]||[], cons=ST.ans[3]||[], memo=ST.ans[4]||'', sb=getSB(CUR_YEAR);
+  var byCareer={}, allTags=[]; cids.forEach(function(cid){(CMAP[cid]||[cid]).forEach(function(t){if(allTags.indexOf(t)<0)allTags.push(t)});});
+  cids.forEach(function(cid){var tags=CMAP[cid]||[cid], must=[],rec=[]; sb.forEach(function(s){if(s.e==='abs_ae'||s.e==='abs_ac')return; var m=s.tg.some(function(t){return tags.indexOf(t)>=0}); if(!m)return; if(s.t==='진로선택')must.push(s.nm); else if(s.t==='일반선택')rec.push(s.nm);}); byCareer[cid]={must:must,rec:rec};});
+  var recommendedSubs=[]; cids.forEach(function(cid){byCareer[cid].must.concat(byCareer[cid].rec).forEach(function(nm){if(recommendedSubs.indexOf(nm)<0)recommendedSubs.push(nm)})});
+  var commonSubs=[],onlySubs={}; recommendedSubs.forEach(function(nm){var p=cids.filter(function(cid){return byCareer[cid].must.indexOf(nm)>=0||byCareer[cid].rec.indexOf(nm)>=0}); if(p.length===cids.length)commonSubs.push(nm); else p.forEach(function(cid){(onlySubs[cid]=onlySubs[cid]||[]).push(nm)});});
+  var fusionSubs=[]; sb.forEach(function(s){if(s.t!=='융합선택')return; if(s.tg.some(function(t){return allTags.indexOf(t)>=0})&&!fusionSubs.some(function(x){return x.nm===s.nm}))fusionSubs.push({nm:s.nm,campus:s.campus||false});});
+  var careerLabels=cids.map(function(cid){var c=CR.find(function(x){return x.id===cid});return c?c.l:cid});
+  var d=document.createElement('div'); d.className='report-shell';
+  var h='<div class="report-hero"><div class="report-kicker">SUBJECT CHOICE REPORT · '+CUR_YEAR+'년 입학 기준</div><div class="report-title">'+escHTML(careerLabels.join(' · '))+'</div><div class="report-sub">학생 입력 내용을 바탕으로 선택과목을 교과군별로 묶어 정리한 상담 보고서형 결과입니다.</div></div><div class="report-body">';
+  h+='<div class="report-grid"><div class="report-stat"><span>교과군 추천 과목</span><b>'+recommendedSubs.length+'</b></div><div class="report-stat"><span>공통 핵심 과목</span><b>'+commonSubs.length+'</b></div><div class="report-stat"><span>융합선택 후보</span><b>'+fusionSubs.length+'</b></div></div>';
+  h+='<div class="section-card"><div class="section-card-head"><div><div class="section-card-title">교과군별 추천 과목</div><div class="section-card-note">과목을 단순 나열하지 않고 국어·수학·영어·사회·과학 등 교과군 단위로 묶었습니다.</div></div><span class="section-mark">그룹화</span></div>'+areaGroupedHTML(recommendedSubs)+'</div>';
+  if(commonSubs.length)h+='<div class="section-card"><div class="section-card-head"><div><div class="section-card-title">먼저 확보할 공통 핵심 과목</div><div class="section-card-note">여러 계열을 고민할 때 우선순위가 높은 과목입니다.</div></div><span class="section-mark">우선 선택</span></div>'+areaGroupedHTML(commonSubs)+'</div>';
+  if(cids.length>1){h+='<details class="section-card" open><summary class="section-card-head"><div><div class="section-card-title">계열별 특화 과목</div><div class="section-card-note">공통 과목 이후 관심 계열별로 추가 검토할 과목입니다.</div></div><span class="section-mark">상담용</span></summary>'; cids.forEach(function(cid){var arr=onlySubs[cid]||[]; if(!arr.length)return; var c=CR.find(function(x){return x.id===cid}); h+='<div style="padding:0 18px 18px"><h3 style="font-size:15px;margin:16px 0 8px;color:#0f172a">'+escHTML(c?c.l:cid)+'</h3>'+areaGroupedHTML(arr)+'</div>';}); h+='</details>';}
+  if(fusionSubs.length)h+='<details class="section-card" open><summary class="section-card-head"><div><div class="section-card-title">융합선택 후보</div><div class="section-card-note">흥미 탐색용으로 적절하지만 등급 산출 과목 수를 먼저 확인해야 합니다.</div></div><span class="section-mark">주의</span></summary>'+areaGroupedHTML(fusionSubs.map(function(s){return s.nm}))+'</details>';
+  h+='<div class="warning-stack">';
+  h+=showWarn('warn','⚠️','선택 전략 핵심','<br>일반선택·진로선택처럼 등급이 산출되는 과목을 먼저 확보하고, 융합선택은 관심 확장용으로 1~2개 이내에서 검토하는 것이 안전합니다.');
+  if(memo)h+=showWarn('good','📝','학생 고민 메모','<br>“'+escHTML(memo)+'”');
+  h+='</div>'+getUnivAdvice(cids); if(recommendedSubs.length)h+=getFulfillMiniHTML(recommendedSubs);
+  h+='<div class="action-strip no-print"><button class="brs" onclick="rst()">처음부터 다시</button><button class="btn-pdf" onclick="window.print()">🖨 보고서 PDF 저장</button></div></div>';
+  d.innerHTML=h; document.getElementById('chat').appendChild(d); makePrintReport(careerLabels,recommendedSubs,commonSubs,fusionSubs,memo,cons,hrds); setTimeout(function(){d.scrollIntoView({behavior:'smooth',block:'nearest'});},60);
+};
+
+
+/* ===== v10 PRO 기능: 저장/불러오기/학생관리/보고서/시각화/슬라이드 상담 ===== */
+(function(){
+  var oldUpdProg = window.updProg;
+  window.updProg = function(){
+    if(oldUpdProg) oldUpdProg();
+    var ps=document.getElementById('ps');
+    if(ps && !document.getElementById('progressLabel')){
+      var prog=ps.querySelector('.prog');
+      if(prog) prog.insertAdjacentHTML('beforebegin','<div class="progress-label" id="progressLabel"><span>상담 진행률</span><span class="progress-chip" id="progressText">0%</span></div>');
+    }
+    var pct=Math.min(Math.round((ST.step||0)/STP.length*100),100);
+    var t=document.getElementById('progressText'); if(t)t.textContent=pct+'% · '+Math.min(ST.step+1,STP.length)+'/'+STP.length+'단계';
+  };
+})();
+function esc2(v){return String(v==null?'':v).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function getStudentMeta(){return {no:(document.getElementById('stuNo')||{}).value||'',name:(document.getElementById('stuName')||{}).value||'',memo:(document.getElementById('stuMemo')||{}).value||''};}
+function setStudentMeta(m){m=m||{}; var _no=document.getElementById('stuNo'); if(_no)_no.value=m.no||''; var _nm=document.getElementById('stuName'); if(_nm)_nm.value=m.name||''; var _mo=document.getElementById('stuMemo'); if(_mo)_mo.value=m.memo||'';}
+function collectState(){return {version:'v10_PRO',savedAt:new Date().toISOString(),meta:getStudentMeta(),CUR_YEAR:CUR_YEAR,T_YEAR:T_YEAR,ST:ST,PLAN_SELS:PLAN_SELS,UNIV_DATA:UNIV_DATA};}
+function restoreState(data){if(!data)return; setStudentMeta(data.meta||{}); CUR_YEAR=data.CUR_YEAR||CUR_YEAR; T_YEAR=data.T_YEAR||T_YEAR; if(data.ST)ST=data.ST; if(data.PLAN_SELS)PLAN_SELS=data.PLAN_SELS; if(data.UNIV_DATA)UNIV_DATA=data.UNIV_DATA; try{setYear(CUR_YEAR)}catch(e){} document.getElementById('chat').innerHTML=''; ST.done=false; if((data.ST||{}).done){ST.step=STP.length; showRes();}else{renderStp();} PLANNER_INITED=false; initPlannerUI(); renderTeacherList();}
+function safeFileName(x){return (x||'학생').replace(/[\\/:*?"<>|\s]+/g,'_')}
+function saveCurrentFile(){var d=collectState(); var blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json;charset=utf-8'}); var a=document.createElement('a'); a.href=URL.createObjectURL(blob); var m=getStudentMeta(); a.download='선택과목상담_'+safeFileName(m.no+'_'+m.name)+'_'+new Date().toISOString().slice(0,10)+'.json'; a.click(); setTimeout(function(){URL.revokeObjectURL(a.href)},1000)}
+function loadCurrentFile(input){var f=input.files&&input.files[0]; if(!f)return; var r=new FileReader(); r.onload=function(){try{restoreState(JSON.parse(r.result)); alert('상담 기록을 불러왔습니다.')}catch(e){alert('불러오기 실패: '+e.message)}}; r.readAsText(f,'UTF-8'); input.value='';}
+function loadRecords(){try{return JSON.parse(localStorage.getItem('dd_course_records_v10')||'[]')}catch(e){return []}}
+function saveRecords(arr){localStorage.setItem('dd_course_records_v10',JSON.stringify(arr||[]))}
+function saveStudentRecord(){var m=getStudentMeta(); if(!m.no && !m.name){alert('학번 또는 성명을 입력해주세요.');return;} var arr=loadRecords(); var key=(m.no||'')+'__'+(m.name||''); var rec={key:key,meta:m,state:collectState(),updatedAt:new Date().toISOString()}; var idx=arr.findIndex(function(x){return x.key===key}); if(idx>=0)arr[idx]=rec; else arr.unshift(rec); saveRecords(arr.slice(0,80)); renderTeacherList(); alert('학생 목록에 저장했습니다.');}
+function renderTeacherList(){var box=document.getElementById('teacherList'); if(!box)return; var arr=loadRecords(); if(!arr.length){box.innerHTML='<div class="teacher-empty">저장된 학생 기록이 없습니다.</div>';return;} box.innerHTML=arr.map(function(r,i){var m=r.meta||{},dt=(r.updatedAt||'').slice(0,10);return '<div class="teacher-row"><span>'+esc2(m.no||'-')+'</span><b>'+esc2(m.name||'이름 없음')+'</b><span>'+esc2(dt)+'</span><button onclick="loadStudentRecord('+i+')">불러오기</button><button onclick="deleteStudentRecord('+i+')">삭제</button></div>';}).join('');}
+function loadStudentRecord(i){var arr=loadRecords(); if(!arr[i])return; restoreState(arr[i].state);}
+function deleteStudentRecord(i){var arr=loadRecords(); if(!arr[i])return; if(!confirm('이 학생 기록을 삭제할까요?'))return; arr.splice(i,1); saveRecords(arr); renderTeacherList();}
+
+/* renderStp를 한 화면 슬라이드 카드형으로 재구성 */
+renderStp=function(){
+  if(ST.done)return; updProg(); var chat=document.getElementById('chat'); if(!chat)return; if(ST.step>=STP.length){showRes();return;}
+  var s=STP[ST.step], h='<div class="step-shell"><div class="step-top"><div><div class="step-no">STEP '+(ST.step+1)+' / '+STP.length+'</div><div class="step-title">'+s.q+'</div><div class="step-sub">'+s.s+'</div></div><div class="step-dots">';
+  for(var di=0;di<STP.length;di++)h+='<span class="step-dot '+(di===ST.step?'on':'')+'"></span>'; h+='</div></div><div class="step-viewport">';
+  if(s.tp==='multi_career'){
+    h+='<div class="slide-grid">'; CR_GROUPS.forEach(function(g){h+='<div class="choice-group"><div class="choice-group-title">'+g.gname+'</div><div class="choice-buttons">'; g.items.forEach(function(item){var ci=CR.indexOf(item); var on=(ST.ans[ST.step]||[]).indexOf(ci)>=0?' on':''; h+='<button class="b'+on+'" data-step="'+ST.step+'" data-cidx="'+ci+'" onclick="tgCareer(this)">'+item.l+'</button>';}); h+='</div></div>';}); h+='</div><div class="cdesc" id="cd'+ST.step+'"></div>';
+  }else if(s.tp==='multi'){
+    h+='<div class="choice-group"><div class="choice-buttons">'; s.ch.forEach(function(ch,k){var on=(ST.ans[ST.step]||[]).indexOf(ch)>=0?' on':''; h+='<button class="b'+on+'" data-step="'+ST.step+'" data-idx="'+k+'" onclick="tgM(this)">'+ch+'</button>';}); h+='</div></div>';
+  }else{
+    h+='<textarea id="ta'+ST.step+'" placeholder="'+(s.ph||'')+'">'+esc2(ST.ans[ST.step]||'')+'</textarea>';
+  }
+  h+='</div><div class="step-actions"><div class="left"><button class="brs" onclick="prevStep()" '+(ST.step===0?'disabled style="opacity:.4"':'')+'>← 이전</button><button class="bsk" onclick="skS('+ST.step+')">건너뛰기</button></div><div class="right">';
+  if(s.tp==='multi_career')h+='<button class="bn" onclick="dnCareer('+ST.step+')">선택 완료 →</button>'; else if(s.tp==='multi')h+='<button class="bn" onclick="dnM('+ST.step+')">선택 완료 →</button>'; else h+='<button class="bn" onclick="dnT('+ST.step+')">다음 →</button>';
+  h+='</div></div></div>'; chat.innerHTML=h;
+};
+function prevStep(){if(ST.step<=0)return; ST.step--; ST.done=false; renderStp();}
+/* 텍스트 입력 저장 보강 */
+var _dnT=dnT; dnT=function(si){var ta=document.getElementById('ta'+si); ST.ans[si]=ta?ta.value.trim():''; ST.step++; renderStp();};
+/* 충족률 시각화 강화 */
+function proFulfillSummary(selectedNames){
+  var results=[]; UNIV_DB.forEach(function(e){var r=calcRate(selectedNames,e); if(r!==null)results.push({entry:e,rate:r.rate,missing:r.missing});});
+  if(!results.length)return '';
+  var avg=Math.round(results.reduce(function(s,r){return s+r.rate},0)/results.length); var high=results.filter(function(r){return r.rate>=80}).length;
+  var missCnt={}; results.forEach(function(r){r.missing.forEach(function(m){missCnt[m]=(missCnt[m]||0)+1})}); var miss=Object.keys(missCnt).sort(function(a,b){return missCnt[b]-missCnt[a]}).slice(0,6);
+  var h='<div class="fulfill-dashboard"><div class="donut-card"><div class="donut-label">전체 평균 충족률</div><div class="donut" style="--p:'+avg+'"><b>'+avg+'%</b></div><div class="donut-label">80% 이상 학과 '+high+'개</div></div><div class="recommend-card"><div class="student-title">🎯 추가 검토하면 좋은 과목</div><div class="recommend-list">';
+  if(miss.length){miss.forEach(function(m){h+='<div class="recommend-item"><b>'+esc2(m)+'</b><br><span>'+missCnt[m]+'개 학과에서 미충족</span></div>'})}else h+='<div class="recommend-item"><b>미충족 과목 없음</b><br><span>현재 선택 조합이 매우 안정적입니다.</span></div>';
+  return h+'</div></div></div>';
+}
+var _renderFulfillHTML=renderFulfillHTML; renderFulfillHTML=function(selectedNames,topN){return proFulfillSummary(selectedNames)+_renderFulfillHTML(selectedNames,topN)};
+/* 보고서 출력 강화 */
+function prepareAndPrintReport(){
+  if(!document.getElementById('printReport').innerHTML){
+    if(!ST.done){var oldStep=ST.step; ST.step=STP.length; showRes(); ST.step=oldStep;}
+  }
+  // 인쇄 헤더에 학생 정보 채우기
+  var m=getStudentMeta();
+  var now=new Date();
+  var dateStr=now.getFullYear()+'. '+(now.getMonth()+1)+'. '+now.getDate()+'.';
+  var el=function(id){return document.getElementById(id);};
+  if(el('pshNo'))el('pshNo').textContent=m.no||'';
+  if(el('pshName'))el('pshName').textContent=m.name||'';
+  if(el('pshMemo'))el('pshMemo').textContent=m.memo||'';
+  if(el('pshDate'))el('pshDate').textContent='출력일: '+dateStr;
+  if(el('pshSchool'))el('pshSchool').textContent=(document.getElementById('modeBadge')||{}).textContent||'';
+  window.print();
+}
+var _makePrintReport=makePrintReport;
+makePrintReport=function(careerLabels,recommendedSubs,commonSubs,fusionSubs,memo,cons,hrds){
+  _makePrintReport(careerLabels,recommendedSubs,commonSubs,fusionSubs,memo,cons,hrds);
+  var meta=getStudentMeta(), pr=document.getElementById('printReport'); if(!pr)return;
+  var extra='<div class="pr-student"><div>학번<b>'+esc2(meta.no||'')+'</b></div><div>성명<b>'+esc2(meta.name||'')+'</b></div><div>상담 메모<b>'+esc2(meta.memo||'')+'</b></div></div>';
+  pr.innerHTML=pr.innerHTML.replace('<div class="pr-section"><h2>1. 학생 입력 내용</h2>',extra+'<div class="pr-section"><h2>1. 학생 입력 내용</h2>');
+  var chart='<div class="pr-section"><h2>요약 지표</h2><div class="pr-chart"><div>추천 과목 수<b>'+recommendedSubs.length+'</b></div><div>공통 핵심<b>'+((commonSubs||[]).length)+'</b></div><div>융합 후보<b>'+((fusionSubs||[]).length)+'</b></div></div></div>';
+  pr.innerHTML=pr.innerHTML.replace('<div class="pr-section"><h2>1. 학생 입력 내용</h2>',chart+'<div class="pr-section"><h2>1. 학생 입력 내용</h2>');
+};
+/* 인쇄 버튼은 보고서 전용으로 연결 */
+var _doPrint=doPrint; doPrint=function(which){if(which==='student'){prepareAndPrintReport();}else{_doPrint(which)}};
+window.addEventListener('load',function(){renderTeacherList(); updProg();});
+</script>
+
+
+<!-- v11: 전체폭 교과군 카드 레이아웃 개선 -->
+<style id="v11-fullwidth-subject-grid-fix">
+/* 화면 전체를 활용 */
+body{background:#eef3f9!important;}
+.wrap{
+  max-width:none!important;
+  width:calc(100vw - 48px)!important;
+  margin:0 auto!important;
+  padding:18px 0 36px!important;
+}
+#pp .card{
+  max-width:none!important;
+  width:100%!important;
+  padding:30px 34px!important;
+  border-radius:30px!important;
+}
+/* 기존 subj-grid가 내부 그룹을 좁게 만드는 문제 해결 */
+#subjGrid.subj-grid,
+.cmp-col .subj-grid{
+  display:block!important;
+  width:100%!important;
+}
+/* 교과군 카드: 화면 폭에 맞춰 자동 배치 */
+.subject-area-stack{
+  display:grid!important;
+  width:100%!important;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr))!important;
+  gap:18px!important;
+  align-items:start!important;
+}
+.subject-area-card{
+  min-width:0!important;
+  border-radius:24px!important;
+  border:1px solid #d8e2f0!important;
+  background:#fff!important;
+  box-shadow:0 14px 32px rgba(15,23,42,.07)!important;
+  overflow:hidden!important;
+}
+.subject-area-head{
+  padding:15px 18px!important;
+  background:linear-gradient(180deg,#ffffff,#f8fbff)!important;
+  border-bottom:1px solid #e5edf7!important;
+  display:flex!important;
+  justify-content:space-between!important;
+  align-items:center!important;
+  gap:10px!important;
+}
+.subject-area-head strong{
+  font-size:18px!important;
+  font-weight:950!important;
+  color:#0f172a!important;
+  letter-spacing:-.03em!important;
+  white-space:nowrap!important;
+}
+.subject-area-head span{
+  font-size:12px!important;
+  font-weight:950!important;
+  color:#1d4ed8!important;
+  background:#eff6ff!important;
+  border:1px solid #bfdbfe!important;
+  border-radius:999px!important;
+  padding:5px 10px!important;
+  white-space:nowrap!important;
+}
+/* 과목이 많은 그룹은 카드 내부 2열 이상으로 자동 배치 */
+.subject-area-body{
+  padding:16px!important;
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(124px,1fr))!important;
+  gap:9px!important;
+}
+.subject-area-body .subj-btn{
+  width:100%!important;
+  min-height:42px!important;
+  text-align:center!important;
+  white-space:normal!important;
+  word-break:keep-all!important;
+  line-height:1.25!important;
+  border-radius:14px!important;
+  background:#f8fafc!important;
+  border:1px solid #cfd8e6!important;
+  padding:9px 10px!important;
+  font-size:13px!important;
+  font-weight:800!important;
+  color:#1e293b!important;
+  box-shadow:none!important;
+}
+.subject-area-body .subj-btn:hover{
+  background:#eef6ff!important;
+  border-color:#93c5fd!important;
+  transform:translateY(-1px);
+}
+.subject-area-body .subj-btn.on{
+  background:#2563eb!important;
+  color:#fff!important;
+  border-color:#2563eb!important;
+  box-shadow:0 8px 18px rgba(37,99,235,.24)!important;
+}
+/* 교과군별 색상 강조 */
+.subject-area-card[data-area="국어"]{border-top:5px solid #ef4444!important;}
+.subject-area-card[data-area="수학"]{border-top:5px solid #7c3aed!important;}
+.subject-area-card[data-area="영어"]{border-top:5px solid #2563eb!important;}
+.subject-area-card[data-area="사회"]{border-top:5px solid #f59e0b!important;}
+.subject-area-card[data-area="과학"]{border-top:5px solid #16a34a!important;}
+.subject-area-card[data-area="정보"]{border-top:5px solid #0891b2!important;}
+.subject-area-card[data-area="교양"]{border-top:5px solid #f97316!important;}
+.subject-area-card[data-area="제2외국어"]{border-top:5px solid #4f46e5!important;}
+.subject-area-card[data-area="체육"]{border-top:5px solid #22c55e!important;}
+.subject-area-card[data-area="예술"]{border-top:5px solid #ec4899!important;}
+/* 비교 탭에서는 3안 각각 안에서 카드가 너무 좁아지지 않게 */
+.cmp-row{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:18px!important;
+}
+.cmp-col .subject-area-stack{
+  grid-template-columns:1fr!important;
+  gap:12px!important;
+}
+.cmp-col .subject-area-body{
+  grid-template-columns:repeat(auto-fit,minmax(105px,1fr))!important;
+  gap:7px!important;
+}
+.cmp-col .subject-area-body .subj-btn{
+  min-height:36px!important;
+  font-size:12px!important;
+  padding:7px 8px!important;
+}
+/* 상단 설명도 압축 */
+#pp .qt{font-size:26px!important;margin-bottom:4px!important;}
+#pp .qs{margin-bottom:16px!important;}
+#planFulfill .sec-ttl{font-size:13px!important;margin:16px 0 12px!important;color:#475569!important;font-weight:900!important;}
+@media(max-width:1280px){
+  .wrap{width:calc(100vw - 28px)!important;}
+  .subject-area-stack{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))!important;gap:14px!important;}
+  .cmp-row{grid-template-columns:1fr!important;}
+  .cmp-col .subject-area-stack{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))!important;}
+}
+@media(max-width:760px){
+  .wrap{width:calc(100vw - 16px)!important;}
+  #pp .card{padding:20px 16px!important;}
+  .subject-area-stack{grid-template-columns:1fr!important;}
+  .subject-area-body{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+}
+@media print{
+  .wrap{width:100%!important;max-width:none!important;padding:0!important;}
+}
+</style>
+<div style="position:fixed;bottom:10px;right:14px;font-size:10px;color:#ccc;pointer-events:none;user-select:none;z-index:9999;">만든 사람 : 기경민(동덕여고), 도운 사람 : 박상근(강원사대부고)</div>
+</body>
+</html>
